@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{crc16,createPixCode}from'./dist/pix.mjs';
+test('matches the Banco Central published BR Code checksum',()=>{assert.equal(crc16('00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304'),'1D3D');});
+test('amount and merchant key are encoded correctly and bounded',()=>{const code=createPixCode(125350);assert.ok(code.includes('011432928642000141'));assert.ok(code.includes('54071253.50'));assert.equal(crc16(code.slice(0,-4)),code.slice(-4));assert.throws(()=>createPixCode(0));assert.throws(()=>createPixCode(100000001));assert.ok(createPixCode(100000000).includes('54101000000.00'));});

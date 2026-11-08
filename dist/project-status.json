@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-11-08",
+  "stages": [
+    {
+      "status": "complete",
+      "label": "Concluído",
+      "title": "Identidade e apresentação",
+      "description": "Identidade visual definida e apresentação do projeto criada."
+    },
+    {
+      "status": "ongoing",
+      "label": "Em andamento",
+      "title": "Experiência do aplicativo",
+      "description": "Telas navegáveis de conversas, TalK, mapas e recursos em refinamento."
+    },
+    {
+      "status": "next",
+      "label": "Próximos passos",
+      "title": "Desenvolvimento e testes",
+      "description": "Validar comunicação local, navegação offline e segurança em aparelhos reais."
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-11-08",
+      "title": "Uma primeira experiência para explorar",
+      "description": "Apresentação do OurTalk, mockup navegável e área de contribuição preparados. O aplicativo segue em desenvolvimento."
+    }
+  ]
+}

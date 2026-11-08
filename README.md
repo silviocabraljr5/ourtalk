@@ -1,42 +1,54 @@
-# OurTalk — Site de apresentação
+# OurTalk
 
-Site estático responsivo em português, preparado para publicação na VPS. Arquivos públicos em `dist/`. Não requer instalação, compilação ou banco de dados.
+Projeto de comunicação, informação e apoio entre pessoas, pensado para preparação comunitária e momentos de falha de conexão.
 
-## Prévia local
+## Estágio atual
 
-Execute `python -m http.server 8080 --directory dist` e abra http://localhost:8080.
+Site de apresentação, protótipo navegável e Pix Copia e Cola para contribuições. Comunicação local, navegação offline, TalK com IA e criptografia ainda precisam ser desenvolvidos e validados. Não há aplicativo pronto para download.
 
-## Publicação na VPS
+## Contribuir
 
-Cadastre `ourtalk.com.br` e `www.ourtalk.com.br` no servidor web, confira os registros DNS e copie o conteúdo de `dist/` para a raiz pública exclusiva desse domínio. Ative HTTPS e redirecione HTTP para HTTPS. Não sobreponha diretórios de outros projetos. O site não foi publicado na VPS nesta entrega.
+Leia [CONTRIBUTING.md](CONTRIBUTING.md). Contribua com código, design, testes, documentação, acessibilidade e ideias. Use issues para sugestões e problemas e pull requests para alterações.
+
+## Executar
+
+Use Node.js 22 ou superior. Não há dependências externas nem etapa de compilação.
+
+```sh
+node server.mjs
+```
+
+Abra http://localhost:8080. Arquivos estáticos em `dist/`.
+
+```sh
+node --test checkout.test.mjs pix.test.mjs
+```
+
+Os testes não realizam pagamentos.
+
+## Estrutura
+
+- `dist/index.html`: apresentação e mockup interativo.
+- `dist/app-demo.html`: protótipo em tela cheia.
+- `dist/pix.mjs`: Pix estático com valor e CRC16.
+- `dist/project-status.json`: status e histórico público do projeto.
+- `server.mjs`: servidor local e integração opcional de checkout.
+- `docs/mapas-e-navegacao.md`: requisitos de navegação.
 
 ## Doações
 
-Pix informado e autorizado pelo responsável do projeto: CNPJ `32.928.642/0001-41`, conta OurWorld. O botão copia a chave; a transferência ocorre no aplicativo do banco. A titularidade bancária não foi verificada por consulta ao banco. Nenhum dado financeiro é coletado pelo site. Não há contador ou relatório fictício de arrecadação.
+A interface gera Pix estático no navegador. Gerar ou copiar o código não confirma recebimento. O contador inicia em R$ 0,00; conciliação e atualização automática ainda não foram implementadas. Nunca some códigos gerados como doações recebidas.
 
-## Marca e situação
+O backend mantém uma integração opcional com InfinitePay. Confirmação por payment_check e registros persistentes precisam ser implementados antes de automatizar a arrecadação.
 
-A referência visual foi recuperada diretamente da conversa original no Chrome em 08/11/2026: `dist/assets/ourtalk-app-original.png`. A arte usa fundo preto/azul profundo, branco e verde-lima, com a marca em balão de conversa. O site utiliza essa arte original na apresentação e sua marca por enquadramento CSS, sem redesenhar o símbolo. Ainda é recomendável obter o arquivo vetorial independente da logo. A proposta anterior de mãos/coração e a primeira interpretação clara deste site foram superadas.
+## Publicação
 
-As funcionalidades do aplicativo são explicitamente apresentadas como planejadas. O simulador energético funciona localmente com valores ilustrativos e hipóteses exibidas. Não há formulário de cadastro, analytics ou rastreamento publicitário. Fontes Google são carregadas externamente; há fallback local. Para auto-hospedar, adicionar os arquivos licenciados da fonte e remover o @import de styles.css.
+Configure SITE_ORIGIN=https://ourtalk.com.br ao usar a API de checkout atrás do proxy HTTPS na VPS. Porta padrão 8080, vinculada a 127.0.0.1. Não inclua credenciais, .env ou dados pessoais no repositório.
 
-## GitHub
+## Atualizar o andamento
 
-Repositório criado: https://github.com/silviocabraljr5/ourtalk, com visibilidade privada inicial até definição da licença. O histórico privado dos chats não faz parte do repositório. Não foi escolhida licença de código automaticamente; a intenção do produto é ser de código aberto. O endereço deve ser divulgado no site quando houver abertura pública.
+Edite `dist/project-status.json`. Datas usam YYYY-MM-DD; `stages` define os cartões e `updates` o histórico. Publique apenas avanços verificados. Não existe painel administrativo nesta versão.
 
-## Conteúdo
+## Código e marcas
 
-- Apresentação, propósito e princípios.
-- Seis grupos de recursos e limites de funcionamento.
-- Apresentação individual dos dez módulos e das três frentes do projeto.
-- Experiência móvel redesenhada em 390 × 844: duas ações principais com 58 px de altura, texto de corpo de 14–15 px, navegação Início/Conversas/Recursos e conteúdo secundário fora da tela inicial. Protótipo isolado em `dist/app-demo.html`; nenhum pedido de ajuda ou mensagem é enviado.
-- Atalhos Cidade/Bíblia/Saúde/Cofre/Preparar e painel alternável Tempo/Comunicados. Os dados meteorológicos são ilustrativos; não existe integração com serviços de previsão.
-- Fluxos conceituais de adição de pessoa por QR Code, convite ou proximidade autorizada. Nenhuma descoberta, leitura de câmera ou identidade real é executada. A tela de privacidade descreve requisitos planejados, incluindo aceite de convites, bloqueio e criptografia a implementar e auditar.
-- Recursos com busca e filtros; atalhos iniciais IA, Mapas e Locais. Conversas distingue Meus contatos e Por perto. O convite de divulgação compartilha o domínio de apresentação e não adiciona automaticamente um contato.
-- Ribeirão Preto é a cidade demonstrativa. O mapa usa iframe online do OpenStreetMap, não um pacote offline. HC Campus e Parque Curupira têm links de fontes oficiais; disponibilidade e atendimento não são confirmados. Fontes consultadas em 08/11/2026.
-- Simulador de energia com validação dos limites dos campos.
-- Roadmap sem prazos inventados.
-- Pix com identificação da conta recebedora.
-- Transparência, dúvidas e informação sobre privacidade.
-
-Antes da publicação final, verificar o Pix em um aplicativo bancário. Relatórios reais poderão ser acrescentados quando disponíveis. Bíblia opcional e previsão previamente salva foram incorporadas ao escopo; a Bíblia depende de tradução licenciada e a previsão deve exibir atualização e validade.
+O código original do projeto é disponibilizado sob a licença MIT (veja LICENSE). Essa licença se aplica ao código, não às logomarcas e materiais de terceiros. Marcas e logomarcas pertencem aos seus titulares; sua presença aqui não concede direitos de uso.
