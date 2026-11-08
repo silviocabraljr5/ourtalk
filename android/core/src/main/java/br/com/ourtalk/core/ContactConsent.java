@@ -1,6 +1,6 @@
 package br.com.ourtalk.core;
 
-/** Local consent rules; this is not authentication, identity verification or a transport. */
+/** Consent rules for a peer session; saving a contact is not required. This is not authentication or a transport. */
 public final class ContactConsent {
     public enum State { UNKNOWN, PENDING, ACCEPTED, DECLINED, BLOCKED }
     private State state = State.UNKNOWN;

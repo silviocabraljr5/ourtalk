@@ -1,0 +1,38 @@
+[
+  {
+    "id": "battery",
+    "title": "Fazer a bateria durar mais",
+    "category": "Energia",
+    "body": "Reduza o brilho e o tempo até a tela apagar. Ative a economia de bateria nas configurações do Android, quando precisar.\n\nEvite aquecimento excessivo e use um carregador compatível com seu aparelho.\n\nA economia de bateria pode limitar atividades e conexões em segundo plano. Antes de depender de um recurso, confira se ele continua funcionando no seu aparelho.",
+    "source": "Ajuda do Android · resumo em português",
+    "sourceUrl": "https://support.google.com/android/answer/7664692?hl=pt-BR",
+    "reviewedAt": "2026-11-08"
+  },
+  {
+    "id": "gps",
+    "title": "Localização e mapas sem internet",
+    "category": "Localização",
+    "body": "O receptor de localização pode obter a posição a partir dos satélites. A consulta a um mapa e o cálculo de uma rota são funções diferentes: os respectivos dados e mecanismos precisam estar no aparelho.\n\nPrédios e obstáculos podem prejudicar a recepção e a precisão. Confira sempre o horário e a margem de erro da posição.\n\nNo OurTalk, solicite a posição apenas quando quiser. A leitura acontece no aparelho e não é enviada a contatos. Nesta primeira versão, os mapas e as rotas ainda não estão disponíveis.",
+    "source": "Android Developers · LocationManager; GPS.gov · precisão",
+    "sourceUrl": "https://www.gps.gov/gps-accuracy-0",
+    "reviewedAt": "2026-11-08"
+  },
+  {
+    "id": "contacts",
+    "title": "Organizar meus contatos",
+    "category": "Preparação",
+    "body": "Combine com as pessoas importantes quais contatos e pontos de encontro vocês pretendem usar. Tenha uma alternativa que não dependa de um único aparelho.\n\nNesta primeira versão, adicionar um nome cria uma referência somente neste celular. Não envia convite, não confirma identidade e não conecta dois aparelhos.\n\nOs históricos desta versão de teste ficam somente neste aparelho. Mensagens só poderão ser enviadas depois de implementarmos e validarmos o transporte e a identidade entre aparelhos.",
+    "source": "Equipe OurTalk · funcionamento da versão 0.1",
+    "sourceUrl": "https://ourtalk.com.br/#andamento",
+    "reviewedAt": "2026-11-08"
+  },
+  {
+    "id": "saved",
+    "title": "Consultar conteúdos salvos",
+    "category": "Biblioteca",
+    "body": "Esta biblioteca já acompanha o aplicativo. Você pode abrir e pesquisar os textos sem uma conexão de internet.\n\nTalK usa busca por palavras nesta primeira versão. Os resultados vêm destes textos e não são respostas geradas por inteligência artificial. Abra um resultado para ver o conteúdo, a fonte e a data de revisão.\n\nFavoritos e marcações do checklist ficam neste aparelho. A desinstalação do aplicativo remove esses dados locais.",
+    "source": "Equipe OurTalk · funcionamento da versão 0.1",
+    "sourceUrl": "https://ourtalk.com.br/#andamento",
+    "reviewedAt": "2026-11-08"
+  }
+]
