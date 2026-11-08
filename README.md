@@ -29,7 +29,7 @@ Repositório criado: https://github.com/silviocabraljr5/ourtalk, com visibilidad
 - Apresentação, propósito e princípios.
 - Seis grupos de recursos e limites de funcionamento.
 - Apresentação individual dos dez módulos e das três frentes do projeto.
-- Quatro mockups interativos conceituais do aplicativo com dados fictícios.
+- Mockup simplificado do app: um cartão útil, duas ações prioritárias e navegação Início/Conversas/Cidade/Mais. Recursos secundários organizados em Mais; pedido de ajuda apenas demonstrativo.
 - Simulador de energia com validação dos limites dos campos.
 - Roadmap sem prazos inventados.
 - Pix com identificação da conta recebedora.
