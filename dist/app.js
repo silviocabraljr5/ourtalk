@@ -9,10 +9,5 @@ document.getElementById('copy-pix').addEventListener('click', async () => { cons
 document.getElementById('year').textContent = String(new Date().getFullYear());
 
 
-document.querySelectorAll('.clean-device').forEach(device => {
- device.querySelectorAll('[data-app-go]').forEach(button => button.addEventListener('click', () => {
-  const target = button.dataset.appGo;
-  device.querySelectorAll('[data-view]').forEach(view => view.classList.toggle('active', view.dataset.view === target));
-  device.querySelectorAll('.device-bottom [data-app-go]').forEach(navButton => { const active = navButton.dataset.appGo === target; navButton.classList.toggle('active', active); navButton.setAttribute('aria-pressed',String(active)); });
- }));
-});
+
+document.querySelectorAll('.ux-app').forEach(app => { app.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => { const target = button.dataset.go; app.querySelectorAll('[data-view]').forEach(view => view.classList.toggle('active',view.dataset.view === target)); app.querySelectorAll('.ux-nav [data-go]').forEach(nav => { const active = nav.dataset.go === target; nav.classList.toggle('active',active); nav.setAttribute('aria-pressed',String(active)); }); app.querySelector('.ux-content').scrollTop=0; })); });
