@@ -52,3 +52,10 @@ Edite `dist/project-status.json`. Datas usam YYYY-MM-DD; `stages` define os cart
 ## Código e marcas
 
 O código original do projeto é disponibilizado sob a licença MIT (veja LICENSE). Essa licença se aplica ao código, não às logomarcas e materiais de terceiros. Marcas e logomarcas pertencem aos seus titulares; sua presença aqui não concede direitos de uso.
+
+
+## Aplicativo Android
+Base nativa em `android/`, com Kotlin/Compose, navegação e checklist local. Compilação da APK depende do Android SDK 36, ainda ausente neste ambiente. O núcleo de consentimento foi compilado com Java 17 e suas transições foram verificadas.
+
+## Cadastro e energia
+O cadastro de lançamento funciona em PHP na hospedagem; leia `docs/cadastro-lancamento.md`. A calculadora usa `dist/energy.mjs`; veja `docs/calculadora-energia.md`.

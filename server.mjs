@@ -23,6 +23,7 @@ const mime={'.mjs':'text/javascript; charset=utf-8','.html':'text/html; charset=
 export const server=http.createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://localhost');
+  if(url.pathname==='/newsletter.php')return json(res,503,{error:'development_server'});
   if(url.pathname==='/payment-config.json'&&req.method==='GET')return json(res,200,{mode:'api',merchant:'OurWorld',receiverCnpj:'32.928.642/0001-41'});
   if(url.pathname==='/api/checkout'){
    if(req.method!=='POST')return json(res,405,{error:'method_not_allowed'});

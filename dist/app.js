@@ -2,9 +2,6 @@ const menu = document.querySelector('.menu');
 const nav = document.querySelector('nav');
 menu.addEventListener('click', () => { const open = menu.getAttribute('aria-expanded') !== 'true'; menu.setAttribute('aria-expanded', String(open)); menu.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); nav.classList.toggle('open', open); });
 nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label', 'Abrir menu'); }));
-function estimate() { const ids = ['phones','lights','days']; const values = ids.map(id => { const input = document.getElementById(id); const n = Number(input.value); return Number.isFinite(n) ? Math.min(Number(input.max), Math.max(Number(input.min), n)) : Number(input.min); }); const [phones, lights, days] = values; const wh = Math.ceil((phones * 15 + lights * 9 * 4) * days / .85 * 1.2); document.getElementById('energy').textContent = wh.toLocaleString('pt-BR') + ' Wh'; }
-document.querySelectorAll('.calculator input').forEach(input => { input.addEventListener('input', estimate); input.addEventListener('change', () => { input.value = String(Math.min(Number(input.max), Math.max(Number(input.min), Number(input.value) || Number(input.min)))); estimate(); }); });
-estimate();
 document.getElementById('year').textContent = String(new Date().getFullYear());
 
 
@@ -34,3 +31,12 @@ fetch('project-status.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('s
  const stages=document.getElementById('project-stages');if(stages&&Array.isArray(data.stages)&&data.stages.length){const items=data.stages.map(stage=>{const article=node('article');article.append(node('span',stage.label,'stage-state '+(['complete','ongoing','next'].includes(stage.status)?stage.status:'next')),node('h3',stage.title),node('p',stage.description));return article;});stages.replaceChildren(...items);}
  const journal=document.getElementById('project-updates');if(journal&&Array.isArray(data.updates)&&data.updates.length){const items=data.updates.filter(update=>/^\d{4}-\d{2}-\d{2}$/.test(update.date)).sort((a,b)=>b.date.localeCompare(a.date)).map(update=>{const article=node('article'),time=node('time',dateLabel(update.date)),body=node('div');time.dateTime=update.date;body.append(node('h4',update.title),node('p',update.description));article.append(time,body);return article;});journal.replaceChildren(...items);}
 }).catch(()=>{/* Keep the published HTML when the feed is unavailable. */});
+const newsletter=document.getElementById('newsletter-form');
+newsletter?.addEventListener('submit',async event=>{
+ event.preventDefault();const feedback=document.getElementById('newsletter-feedback');const button=newsletter.querySelector('button[type="submit"]');
+ if(!newsletter.reportValidity())return;
+ const form=new FormData(newsletter);const email=String(form.get('email')||'').trim();const whatsapp=String(form.get('whatsapp')||'').trim();
+ if(!email&&!whatsapp){feedback.textContent='Informe seu e-mail ou WhatsApp para receber o aviso.';return;}
+ button.disabled=true;feedback.textContent='Salvando seu cadastro…';
+ try{const response=await fetch('newsletter.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,whatsapp,company:String(form.get('company')||''),consent:form.get('consent')==='on'})});const result=await response.json();if(!response.ok){const messages={invalid_email:'Confira seu e-mail.',invalid_whatsapp:'Confira o WhatsApp com DDD.',consent_required:'Autorize o recebimento do aviso para continuar.',try_later:'Aguarde um pouco antes de tentar novamente.'};throw new Error(messages[result.error]||'Não foi possível salvar agora. Tente novamente em instantes.');}if(!result.accepted)throw new Error('Não foi possível salvar agora.');newsletter.reset();feedback.textContent='Cadastro recebido! Vamos avisar quando o OurTalk estiver disponível para download.';}catch(error){feedback.textContent=error.message||'Não foi possível salvar agora. Tente novamente.';}finally{button.disabled=false;}
+});

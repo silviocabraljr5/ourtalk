@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{sizeEnergy}from'./dist/energy.mjs';
+const defaults={days:3,reserve:.2,efficiency:.9,usable:.8,sunHours:4,solarYield:.75,recoveryDays:3,voltage:12.8,startupWatts:0,loads:[{count:2,mode:'charge',amount:15,usage:1,chargeWatts:20,ac:false},{count:2,mode:'watts',amount:9,usage:4,ac:false}]};
+const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
+test('sizes energy, storage and solar without mixing W, Wh or Ah',()=>{const r=sizeEnergy(defaults);near(r.dailyWh,102);near(r.outputWh,306);near(r.batteryWh,510);near(r.batteryAh,39.84375);near(r.solarDailyW,45.333333333333336);near(r.solarRecoveryW,90.66666666666667);assert.equal(r.inverterContinuousW,0);assert.equal(r.dcWatts,58);});
+test('accounts for AC load and explicit starting power independently of battery energy',()=>{const r=sizeEnergy({...defaults,loads:[{mode:'watts',count:1,amount:100,usage:2,ac:true}],startupWatts:600});near(r.dailyWh,200);near(r.inverterContinuousW,125);assert.equal(r.inverterSurgeW,600);});
+test('no sunlight has no fictitious charging and empty loads need no hardware',()=>{assert.equal(sizeEnergy({...defaults,sunHours:0}).solarDailyW,null);const r=sizeEnergy({...defaults,loads:[]});assert.equal(r.batteryWh,0);assert.equal(r.inverterContinuousW,0);});
+test('rejects impossible efficiency, duty cycle and non-finite values',()=>{for(const change of [{efficiency:0},{usable:1.01},{days:-1},{sunHours:Infinity}])assert.throws(()=>sizeEnergy({...defaults,...change}));assert.throws(()=>sizeEnergy({...defaults,loads:[{mode:'watts',count:1,amount:10,usage:25}]}));});
+
+test('includes idle inverter consumption in autonomy and solar needs',()=>{const r=sizeEnergy({...defaults,loads:[],idleWatts:10,idleHours:24});near(r.dailyWh,240);near(r.batteryWh,1200);});
