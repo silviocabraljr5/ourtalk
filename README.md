@@ -30,6 +30,8 @@ Repositório criado: https://github.com/silviocabraljr5/ourtalk, com visibilidad
 - Seis grupos de recursos e limites de funcionamento.
 - Apresentação individual dos dez módulos e das três frentes do projeto.
 - Experiência móvel redesenhada em 390 × 844: duas ações principais com 58 px de altura, texto de corpo de 14–15 px, navegação Início/Conversas/Recursos e conteúdo secundário fora da tela inicial. Protótipo isolado em `dist/app-demo.html`; nenhum pedido de ajuda ou mensagem é enviado.
+- Atalhos Cidade/Bíblia/Saúde/Cofre/Preparar e painel alternável Tempo/Comunicados. Os dados meteorológicos são ilustrativos; não existe integração com serviços de previsão.
+- Fluxos conceituais de adição de pessoa por QR Code, convite ou proximidade autorizada. Nenhuma descoberta, leitura de câmera ou identidade real é executada. A tela de privacidade descreve requisitos planejados, incluindo aceite de convites, bloqueio e criptografia a implementar e auditar.
 - Simulador de energia com validação dos limites dos campos.
 - Roadmap sem prazos inventados.
 - Pix com identificação da conta recebedora.
