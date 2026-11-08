@@ -32,6 +32,8 @@ Repositório criado: https://github.com/silviocabraljr5/ourtalk, com visibilidad
 - Experiência móvel redesenhada em 390 × 844: duas ações principais com 58 px de altura, texto de corpo de 14–15 px, navegação Início/Conversas/Recursos e conteúdo secundário fora da tela inicial. Protótipo isolado em `dist/app-demo.html`; nenhum pedido de ajuda ou mensagem é enviado.
 - Atalhos Cidade/Bíblia/Saúde/Cofre/Preparar e painel alternável Tempo/Comunicados. Os dados meteorológicos são ilustrativos; não existe integração com serviços de previsão.
 - Fluxos conceituais de adição de pessoa por QR Code, convite ou proximidade autorizada. Nenhuma descoberta, leitura de câmera ou identidade real é executada. A tela de privacidade descreve requisitos planejados, incluindo aceite de convites, bloqueio e criptografia a implementar e auditar.
+- Recursos com busca e filtros; atalhos iniciais IA, Mapas e Locais. Conversas distingue Meus contatos e Por perto. O convite de divulgação compartilha o domínio de apresentação e não adiciona automaticamente um contato.
+- Ribeirão Preto é a cidade demonstrativa. O mapa usa iframe online do OpenStreetMap, não um pacote offline. HC Campus e Parque Curupira têm links de fontes oficiais; disponibilidade e atendimento não são confirmados. Fontes consultadas em 08/11/2026.
 - Simulador de energia com validação dos limites dos campos.
 - Roadmap sem prazos inventados.
 - Pix com identificação da conta recebedora.
