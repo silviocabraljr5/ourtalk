@@ -22,12 +22,14 @@ As funcionalidades do aplicativo são explicitamente apresentadas como planejada
 
 ## GitHub
 
-Este diretório é o conteúdo destinado ao repositório. Não inclua o histórico privado dos chats. O nome sugerido é `ourtalk`, visibilidade privada inicial até definição da licença. Não foi escolhida licença de código automaticamente; a intenção do produto é ser de código aberto. O link público do repositório deve ser inserido na seção de transparência após criação.
+Repositório criado: https://github.com/silviocabraljr5/ourtalk, com visibilidade privada inicial até definição da licença. O histórico privado dos chats não faz parte do repositório. Não foi escolhida licença de código automaticamente; a intenção do produto é ser de código aberto. O endereço deve ser divulgado no site quando houver abertura pública.
 
 ## Conteúdo
 
 - Apresentação, propósito e princípios.
 - Seis grupos de recursos e limites de funcionamento.
+- Apresentação individual dos dez módulos e das três frentes do projeto.
+- Quatro mockups interativos conceituais do aplicativo com dados fictícios.
 - Simulador de energia com validação dos limites dos campos.
 - Roadmap sem prazos inventados.
 - Pix com identificação da conta recebedora.
