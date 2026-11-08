@@ -16,7 +16,7 @@ Pix informado e autorizado pelo responsável do projeto: CNPJ `32.928.642/0001-4
 
 ## Marca e situação
 
-A direção mais recente recuperada do chat é um O aberto com balão de conversa integrado, aprovado como comunicação, proteção e esperança. O arquivo visual não foi disponibilizado pelo histórico. Esta versão usa uma assinatura tipográfica provisória e NÃO reproduz nem substitui o símbolo aprovado. Inserir o SVG/PNG original quando recebido. A proposta anterior de mãos/coração foi superada pela atualização recuperada.
+A referência visual foi recuperada diretamente da conversa original no Chrome em 08/11/2026: `dist/assets/ourtalk-app-original.png`. A arte usa fundo preto/azul profundo, branco e verde-lima, com a marca em balão de conversa. O site utiliza essa arte original na apresentação e sua marca por enquadramento CSS, sem redesenhar o símbolo. Ainda é recomendável obter o arquivo vetorial independente da logo. A proposta anterior de mãos/coração e a primeira interpretação clara deste site foram superadas.
 
 As funcionalidades do aplicativo são explicitamente apresentadas como planejadas. O simulador energético funciona localmente com valores ilustrativos e hipóteses exibidas. Não há formulário de cadastro, analytics ou rastreamento publicitário. Fontes Google são carregadas externamente; há fallback local. Para auto-hospedar, adicionar os arquivos licenciados da fonte e remover o @import de styles.css.
 
@@ -35,4 +35,4 @@ Repositório criado: https://github.com/silviocabraljr5/ourtalk, com visibilidad
 - Pix com identificação da conta recebedora.
 - Transparência, dúvidas e informação sobre privacidade.
 
-Antes da publicação final, aplicar a logo original e verificar o Pix em um aplicativo bancário. Relatórios reais poderão ser acrescentados quando disponíveis.
+Antes da publicação final, verificar o Pix em um aplicativo bancário. Relatórios reais poderão ser acrescentados quando disponíveis. Bíblia opcional e previsão previamente salva foram incorporadas ao escopo; a Bíblia depende de tradução licenciada e a previsão deve exibir atualização e validade.
