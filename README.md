@@ -47,7 +47,13 @@ Configure SITE_ORIGIN=https://ourtalk.com.br ao usar a API de checkout atrás do
 
 ## Atualizar o andamento
 
-Edite `dist/project-status.json`. Datas usam YYYY-MM-DD; `stages` define os cartões e `updates` o histórico. Publique apenas avanços verificados. Não existe painel administrativo nesta versão.
+Toda entrega publicada no GitHub inclui documentação do que mudou, da validação e das pendências, além de uma atualização no site público.
+
+1. Atualize `dist/project-status.json` no mesmo commit da entrega. Use datas YYYY-MM-DD, mantenha os cartões em `stages` e coloque a entrada mais recente no início de `updates`.
+2. Publique o JSON na raiz do site `ourtalk.com.br`. Para uma atualização apenas de andamento, publique somente esse arquivo, mantendo uma cópia da versão anterior fora da raiz pública.
+3. Confira por HTTPS se o JSON público coincide com o arquivo do commit e se a seção de andamento carrega a nova entrada.
+
+Registre avanços verificados e diferencie versão interna, validação em campo e lançamento público.
 
 ## Código e marcas
 

@@ -10,17 +10,22 @@
     {
       "status": "ongoing",
       "label": "Em andamento",
-      "title": "Experiência do aplicativo",
-      "description": "Telas navegáveis de conversas, TalK, mapas e recursos em refinamento."
+      "title": "OurTalk Android 0.2",
+      "description": "Versão interna com conversa individual próxima experimental, verificação por código e proteção criptográfica dos dados locais."
     },
     {
       "status": "next",
       "label": "Próximos passos",
-      "title": "Desenvolvimento e testes",
-      "description": "Validar comunicação local, navegação offline e segurança em aparelhos reais."
+      "title": "Testes em aparelhos e mapas offline",
+      "description": "Validar a troca de mensagens sem internet em dois Androids físicos e avançar nos mapas e rotas offline."
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-08",
+      "title": "Android 0.2 disponível para testes internos",
+      "description": "A versão implementa conversa próxima experimental e criptografia dos históricos locais. Sete testes passaram no emulador. A comunicação entre dois Androids físicos e o lançamento na Play Store seguem pendentes."
+    },
     {
       "date": "2026-11-08",
       "title": "O OurTalk já tem um endereço público",
