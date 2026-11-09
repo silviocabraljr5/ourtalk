@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "Código aberto e tela de Conversas no site",
+      "description": "A seção de código aberto reúne o repositório, a licença MIT, o guia de contribuição e o canal de sugestões. A galeria mostra uma conversa de grupo local e oferece um atalho para explorar Conversas no celular interativo."
+    },
+    {
+      "date": "2026-11-09",
       "title": "Uma apresentação mais clara do OurTalk",
       "description": "O site ganhou um exemplo de uso sem internet, capturas do Android, explicações sobre os recursos disponíveis e planejados e mais caminhos para apoiar o projeto."
     },

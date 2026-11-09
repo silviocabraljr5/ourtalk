@@ -40,3 +40,10 @@ newsletter?.addEventListener('submit',async event=>{
  button.disabled=true;feedback.textContent='Salvando seu cadastro…';
  try{const response=await fetch('newsletter.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,whatsapp,company:String(form.get('company')||''),consent:form.get('consent')==='on'})});const result=await response.json();if(!response.ok){const messages={invalid_email:'Confira seu e-mail.',invalid_whatsapp:'Confira o WhatsApp com DDD.',consent_required:'Autorize o recebimento do aviso para continuar.',try_later:'Aguarde um pouco antes de tentar novamente.'};throw new Error(messages[result.error]||'Não foi possível salvar agora. Tente novamente em instantes.');}if(!result.accepted)throw new Error('Não foi possível salvar agora.');newsletter.reset();feedback.textContent='Cadastro recebido! Vamos avisar quando o OurTalk estiver disponível para download.';}catch(error){feedback.textContent=error.message||'Não foi possível salvar agora. Tente novamente.';}finally{button.disabled=false;}
 });
+
+document.querySelectorAll('[data-demo-view]').forEach(link => {
+  link.addEventListener('click', () => {
+    const target = document.querySelector('#demo-ourtalk .ux-nav [data-go="conversas"]');
+    if (target) target.click();
+  });
+});
