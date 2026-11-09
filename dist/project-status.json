@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "Conversas por perto sem adicionar contatos",
+      "description": "A apresentação explica que a descoberta experimental permite iniciar uma conversa individual com outra pessoa por perto, mesmo fora da lista de contatos, quando os dois usam aparelhos compatíveis e aceitam a conexão."
+    },
+    {
+      "date": "2026-11-09",
       "title": "Código aberto e tela de Conversas no site",
       "description": "A seção de código aberto reúne o repositório, a licença MIT, o guia de contribuição e o canal de sugestões. A galeria mostra uma conversa de grupo local e oferece um atalho para explorar Conversas no celular interativo."
     },
