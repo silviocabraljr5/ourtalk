@@ -96,9 +96,9 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
     Destination.HELP->{ScreenTitle("Pedir ajuda");InfoCard("Ainda não há envio de pedidos","Esta versão de teste não envia SOS nem aciona serviços de emergência. Estamos desenvolvendo a comunicação e a confirmação de recebimento.")}
     Destination.ABOUT->{
      ScreenTitle("Feito para aproximar")
-     InfoCard("OurTalk · 0.2.0 de teste","Biblioteca, busca por palavras, favoritos, checklist, contatos e grupos locais. A conexão individual por perto é experimental e depende de Google Play Services, permissões e verificação do código nos dois aparelhos.")
+     InfoCard("OurTalk · ${BuildConfig.VERSION_NAME}","Biblioteca, busca por palavras, favoritos, checklist, contatos e grupos locais. O mapa municipal offline de Ribeirão Preto inclui hospitais e unidades de pronto atendimento. A conexão individual por perto é experimental e depende de Google Play Services, permissões e verificação do código nos dois aparelhos.")
      InfoCard("Privacidade","Históricos locais e posição salva usam AES-GCM com chave do Android Keystore. A conexão próxima usa a criptografia do Nearby; não anuncia GPS nem agenda. Conversas próximas ficam só na memória e são apagadas ao encerrar. O SDK Google pode coletar diagnósticos conforme as configurações do aparelho. Não há criptografia de grupos ou identidade permanente verificada nesta etapa.")
-     InfoCard("O que vem a seguir","Comunicação segura, mapas e rotas baixados, pacotes de conteúdo e TalK com IA. Os recursos precisam ser validados em aparelhos reais antes do lançamento.")
+     InfoCard("O que vem a seguir","Comunicação entre plataformas, ampliação dos mapas, rotas offline, pacotes de conteúdo e TalK com IA. Os recursos precisam ser validados em aparelhos reais antes do lançamento.")
     }
    }
   }

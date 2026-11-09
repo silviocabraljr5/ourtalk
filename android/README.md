@@ -1,4 +1,4 @@
-# OurTalk Android — versão interna 0.2
+# OurTalk Android — versão interna 0.3
 
 Aplicativo nativo Kotlin/Jetpack Compose. Identidade escura com verde; navegação Início, Conversas, TalK e Mapa. Recursos fica no cabeçalho. Nenhum lançamento na Play Store nesta etapa.
 
@@ -8,6 +8,7 @@ Aplicativo nativo Kotlin/Jetpack Compose. Identidade escura com verde; navegaç�
 - Contatos de referência, chats e grupos locais; mensagens e rascunhos persistentes, sem falsas confirmações de entrega/leitura.
 - Dados locais e posição opcional cifrados com AES-256-GCM/Android Keystore. Migração do formato anterior sem fallback para texto aberto.
 - Consulta GPS por ação e permissão explícitas, com precisão e horário; sem acesso em segundo plano.
+- Mapa municipal offline de Ribeirão Preto com hospitais, pronto atendimento, busca por unidade ou endereço e marcador GPS opcional. Consulte o cadastro sem conceder localização.
 - Conexão próxima individual experimental via Nearby Connections 19.5.1: opt-in por dez minutos, apelido temporário, comparação de código obrigatória, aceite bilateral, mensagens de texto e confirmação do aplicativo receptor.
 - Conversar por perto não exige salvar contato. A sessão termina ao sair do app; histórico próximo é temporário, somente em memória.
 - Compartilhamento voluntário do endereço público do projeto.
@@ -16,7 +17,7 @@ Aplicativo nativo Kotlin/Jetpack Compose. Identidade escura com verde; navegaç�
 
 O transporte de rádio **ainda precisa ser validado em dois aparelhos físicos**. Google Play Services e Bluetooth/Wi-Fi compatíveis são necessários. O aparelho precisa manter os rádios ligados, mesmo sem internet/operadora. Não há alcance ilimitado ou garantia de disponibilidade. O SDK Google é uma dependência com licença própria e pode coletar diagnósticos conforme as configurações de Uso e diagnóstico do aparelho. Sem Play Services, os recursos locais continuam disponíveis.
 
-Grupos continuam locais, sem convites ou chaves de grupo de rede. Nomes de contatos não autenticam usuários próximos. Não há identidade permanente de rede, bloqueio persistente, envio pela internet, retransmissão, mapas baixados, rotas ou IA generativa. TalK é busca de conteúdos. Pedir ajuda não envia SOS. Mensagens locais antigas nunca são transmitidas automaticamente.
+Grupos continuam locais, sem convites ou chaves de grupo de rede. Nomes de contatos não autenticam usuários próximos. Identidade permanente de rede, bloqueio persistente, envio pela internet, retransmissão, outras áreas de mapas, rotas e IA generativa estão pendentes. TalK é busca de conteúdos. Pedir ajuda não envia SOS. Mensagens locais antigas nunca são transmitidas automaticamente.
 
 Leia docs/seguranca.md, docs/conversas-e-proximos.md e docs/testes-dois-aparelhos.md. O escopo completo está em ../ROADMAP.md.
 

@@ -61,7 +61,7 @@ O código original do projeto é disponibilizado sob a licença MIT (veja LICENS
 
 
 ## Aplicativo Android
-Código nativo em `android/`, com Kotlin/Compose e Android SDK 36. A versão interna 0.2 inclui proteção local com Android Keystore e integração experimental Nearby Connections, com comparação de código obrigatória. A comunicação de rádio depende de validação em dois aparelhos físicos; não apresentar a compilação ou testes de emulador como prova de alcance ou entrega real. Leia [SECURITY.md](SECURITY.md) antes de contribuir.
+Código nativo em `android/`, com Kotlin/Compose e Android SDK 36. A versão interna 0.3 inclui mapa municipal offline de Ribeirão Preto, proteção local com Android Keystore e integração experimental Nearby Connections, com comparação de código obrigatória. A comunicação de rádio depende de validação em dois aparelhos físicos; não apresentar a compilação ou testes de emulador como prova de alcance ou entrega real. Leia [SECURITY.md](SECURITY.md) antes de contribuir.
 
 ## Cadastro e energia
 O cadastro de lançamento funciona em PHP na hospedagem; leia `docs/cadastro-lancamento.md`. A calculadora usa `dist/energy.mjs`; veja `docs/calculadora-energia.md`.

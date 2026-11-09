@@ -14,6 +14,11 @@ Definido pelo usuário em 08/11/2026: a pessoa deve saber onde está e para onde
 
 ## Pacote offline
 
+A versão interna Android 0.3 inclui o contorno municipal de Ribeirão Preto e um cadastro offline de 31 unidades. A busca funciona por nome, endereço, categoria ou CNES e o filtro municipal destaca quatro UPAs e o pronto atendimento Vila Virgínia. O GPS é opcional, consultado por ação do usuário e distinguido de leituras antigas. A rede de ruas e o cálculo de rotas continuam pendentes.
+O cadastro parte do [CNES de 07/11/2026](https://dadosabertos.saude.gov.br/dataset/cnes-cadastro-nacional-de-estabelecimentos-de-saude/resource/cd884664-b378-4c6c-854b-6a08faa25d19). Inclui registros municipais sem motivo de desabilitação dos tipos hospital geral, especializado, hospital-dia, pronto-socorro e pronto atendimento, além das cinco unidades identificadas pela [Prefeitura](https://www.ribeiraopreto.sp.gov.br/portal/saude/relacao-telefones-enderecos). Registros desabilitados ficam fora do diretório. O cadastro é um retrato das fontes e a classificação hospitalar não confirma porta aberta para urgências. A conferência de unidades omitidas, endereços, entradas e disponibilidade em campo segue pendente.
+A [malha municipal do IBGE](https://servicodados.ibge.gov.br/api/v3/malhas/municipios/3543402?formato=application%2Fvnd.geo%2Bjson&qualidade=maxima) fornece o contorno. A Prefeitura identifica o endereço da Unidade de Emergência do HC em sua [lista de contatos](https://www.ribeiraopreto.sp.gov.br/portal/saude/telefones-uteis). O marcador dessa unidade vem do [nó 492635628 do OpenStreetMap](https://www.openstreetmap.org/node/492635628), © OpenStreetMap contributors sob [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). O botão do SAMU abre o discador com [192](https://www.gov.br/saude/pt-br/composicao/saes/samu-192/samu-192).
+O JSON inclui apenas dados públicos necessários para encontrar as unidades. A licença MIT cobre o código. Para regenerar o cadastro, execute `python android/tools/build_ribeirao_health_map.py malha.geojson cnes.zip android/app/src/main/assets/ribeirao-saude.json AAAA-MM-DD` com os arquivos das fontes acima.
+
 Baixar previamente cartografia, índice de endereços e locais, dados necessários ao cálculo de rotas, estilos, fontes e ícones. Não depender de mapas, geocodificação ou rotas hospedados externamente para as ações essenciais. Verificar integridade e permitir atualização e gerenciamento de armazenamento.
 
 ## Estados e contingências
@@ -37,4 +42,4 @@ Em aparelho real, baixar o pacote e retirar a conectividade de dados/operadora m
 
 ## Estado atual
 
-O protótipo web usa um iframe online do OpenStreetMap e telas demonstrativas. Não possui motor de navegação, posição GNSS real, mapas baixados nem roteamento offline. A experiência descrita neste documento é um requisito de desenvolvimento, não uma capacidade entregue.
+O protótipo web usa um iframe online do OpenStreetMap e telas demonstrativas. A implementação offline descrita acima pertence ao aplicativo Android interno.

@@ -15,7 +15,7 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Contatos de rede e bloqueio | Referências locais e consentimento por sessão | Identidade persistente verificada, vinculação a contato e bloqueio persistente sem confiar em apelidos |
 | Grupos de rede | Grupos locais somente | Protocolo revisado, convites/aceite, gestão/rotação de chaves, saída e remoção de membros |
 | Comunicação por internet | Pendente | Backend autenticado, protocolo de mensagens revisado, abuso/limites, observabilidade sem conteúdo e operação segura |
-| Mapa Ribeirão Preto e rotas offline | GPS pontual sob permissão; pacote de mapas ausente | Cartografia e POIs com licença/fonte/data, pacote íntegro, geocodificação e motor de rotas local; testes de campo |
+| Mapa Ribeirão Preto e rotas offline | Mapa municipal com cadastro de hospitais e pronto atendimento, busca offline e GPS pontual sob permissão | Testes de campo, atualização do cadastro, rede viária, geocodificação e motor de rotas local |
 | Clima e comunicados | Apresentação conceitual | Fontes autorizadas, cache com horário/validade, origem e estados sem conexão |
 | TalK | Busca por palavras em guias incluídos | Modelo/recursos do aparelho, fontes, revisão de segurança e avaliação sem inventar orientações |
 | Google Play | AAB de preparação sem chave de produção | Funções validadas, assinatura, política, Data Safety, conta/testadores e revisão da loja |

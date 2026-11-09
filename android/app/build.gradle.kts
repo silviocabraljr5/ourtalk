@@ -2,7 +2,7 @@ plugins { id("com.android.application"); id("org.jetbrains.kotlin.android"); id(
 android {
     namespace = "br.com.ourtalk.app"
     compileSdk = 36
-    defaultConfig { applicationId = "br.com.ourtalk.app"; minSdk = 26; targetSdk = 36; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"; versionCode = 2; versionName = "0.2.0" }
+    defaultConfig { applicationId = "br.com.ourtalk.app"; minSdk = 26; targetSdk = 36; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"; versionCode = 3; versionName = "0.3.0" }
     buildFeatures { compose = true; buildConfig = true }
     buildTypes { getByName("debug") { applicationIdSuffix = ".dev"; versionNameSuffix = "-dev" }; getByName("release") { isMinifyEnabled = true; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro") } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }

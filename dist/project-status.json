@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-08",
+  "updatedAt": "2026-11-09",
   "stages": [
     {
       "status": "complete",
@@ -10,17 +10,22 @@
     {
       "status": "ongoing",
       "label": "Em andamento",
-      "title": "OurTalk Android 0.2",
-      "description": "Versão interna com conversa individual próxima experimental, verificação por código e proteção criptográfica dos dados locais."
+      "title": "OurTalk Android 0.3",
+      "description": "A versão interna inclui mapa municipal offline com hospitais e unidades de pronto atendimento de Ribeirão Preto."
     },
     {
       "status": "next",
       "label": "Próximos passos",
-      "title": "Testes em aparelhos e mapas offline",
-      "description": "Validar conversas próximas sem internet em aparelhos físicos, incluindo Android com iPhone, e avançar nos mapas e rotas offline."
+      "title": "Validação em campo e preparação da Play Store",
+      "description": "Conferir o cadastro de saúde em campo e testar a troca de mensagens sem internet entre aparelhos físicos. O cálculo de rotas segue no roteiro."
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-09",
+      "title": "Mapa municipal de saúde na versão Android 0.3",
+      "description": "O APK interno inclui um mapa offline de Ribeirão Preto com 31 unidades cadastradas e filtro para as cinco unidades municipais de pronto atendimento. A busca e o filtro passaram em emulador. A distribuição pública e as rotas offline seguem pendentes."
+    },
     {
       "date": "2026-11-08",
       "title": "Código do OurTalk aberto à comunidade",

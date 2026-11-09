@@ -25,8 +25,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.delay
 
-private data class PositionFix(val latitude:Double,val longitude:Double,val accuracy:Float,val time:Long,val mock:Boolean)
+internal data class PositionFix(val latitude:Double,val longitude:Double,val accuracy:Float,val time:Long,val mock:Boolean)
 private class GpsReader(context:Context) {
  private val manager=context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
  private val handler=Handler(Looper.getMainLooper())
@@ -64,9 +65,17 @@ private class GpsReader(context:Context) {
  val reader=remember{GpsReader(context)}
  val stored=remember{runCatching{SecureStore(context,"ourtalk-position-v1")}}
  val preferences=stored.getOrNull()
- if(preferences==null){InfoCard("Posição salva indisponível","Não foi possível abrir os dados protegidos. Feche e abra o app para tentar novamente. A posição salva não foi apagada.");return}
+ if(preferences==null){InfoCard("Posição salva indisponível","Não foi possível abrir os dados protegidos. Feche e abra o app para tentar novamente. A posição salva não foi apagada.");OfflineCityMap(null,false);return}
  fun readSaved():PositionFix?=try{if(!preferences.contains("latitude"))null else PositionFix(preferences.getString("latitude",null)!!.toDouble(),preferences.getString("longitude",null)!!.toDouble(),preferences.getFloat("accuracy",0f),preferences.getLong("time",0L),preferences.getBoolean("mock",false))}catch(_:Exception){null}
  var fix by remember{mutableStateOf(readSaved())};var fromSaved by remember{mutableStateOf(fix!=null)}
+ var now by remember(fix){mutableLongStateOf(System.currentTimeMillis())}
+ LaunchedEffect(fix,fromSaved){
+  val age=fix?.let{now-it.time}
+  if(!fromSaved && age!=null && age in -60000L..120000L){
+   delay(120001L-age)
+   now=System.currentTimeMillis()
+  }
+ }
  var busy by remember{mutableStateOf(false)};var message by remember{mutableStateOf("")};var save by remember{mutableStateOf(false)}
  val start:()->Unit={busy=true;message="Buscando uma leitura por satélite…";reader.request{position,error->busy=false;if(position!=null){fix=position;fromSaved=false;message="";if(save){preferences.edit().putString("latitude",position.latitude.toString()).putString("longitude",position.longitude.toString()).putFloat("accuracy",position.accuracy).putLong("time",position.time).putBoolean("mock",position.mock).apply()}}else message=error?:"Leitura indisponível."}}
  val permissions=rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){grants->if(grants[Manifest.permission.ACCESS_FINE_LOCATION]==true)start() else message="A leitura GPS desta versão precisa da localização precisa. Você pode continuar usando os outros recursos sem concedê-la."}
@@ -74,7 +83,7 @@ private class GpsReader(context:Context) {
  ScreenTitle("Minha localização")
  Text("Consulte sua posição no aparelho. Ela não é enviada para contatos.")
  fix?.let{position->
-  val old=System.currentTimeMillis()-position.time>120000L||position.time>System.currentTimeMillis()+60000L
+  val old=now-position.time !in -60000L..120000L
   InfoCard(if(fromSaved||old)"Última posição registrada" else "Leitura do GPS",String.format(Locale.US,"Latitude: %.6f\nLongitude: %.6f",position.latitude,position.longitude)+"\nPrecisão informada: ${position.accuracy.toInt()} m\nHorário: ${DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.MEDIUM).format(Date(position.time))}")
   if(position.mock)Text("Posição de teste informada pelo aparelho.",color=TalkLime)
   if(fromSaved||old)Text("Essa leitura não confirma onde você está agora.",style=MaterialTheme.typography.bodySmall)
@@ -83,5 +92,6 @@ private class GpsReader(context:Context) {
  Button(enabled=!busy,onClick={if(context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)start() else permissions.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION))},modifier=Modifier.fillMaxWidth().height(56.dp)){Text(if(busy)"Buscando satélites…" else "Consultar minha posição")}
  if(message.isNotEmpty())Text(message,style=MaterialTheme.typography.bodyMedium)
  if(preferences.contains("latitude"))TextButton(onClick={preferences.edit().clear().apply();if(fromSaved){fix=null;fromSaved=false};message="Posição salva removida deste aparelho."}){Text("Apagar posição salva")}
- InfoCard("Mapas da cidade","Nenhum mapa está instalado nesta primeira versão. O pacote de Ribeirão Preto e as rotas offline serão desenvolvidos na próxima etapa.")
+ val age=fix?.let{now-it.time}
+ OfflineCityMap(fix, !fromSaved && age!=null && age in -60000L..120000L)
 }

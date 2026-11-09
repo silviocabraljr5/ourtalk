@@ -15,6 +15,20 @@ class LocalFeaturesTest {
  private fun tap(text:String,scroll:Boolean=false){val node=ui.onNodeWithText(text,useUnmergedTree=false);if(scroll)node.performScrollTo();node.performTouchInput{click()}}
  private fun nav(tag:String){ui.onNodeWithTag("nav-$tag").performClick()}
  private fun field(label:String,value:String){ui.onNode(hasSetTextAction() and hasText(label)).performTextInput(value)}
+ @Test fun municipalHealthMapFiltersAndFindsFacilitiesWithoutLocation(){
+  nav("MAP")
+  ui.onNodeWithText("Hospitais e pronto atendimento").performScrollTo().assertIsDisplayed()
+  ui.onNodeWithContentDescription("Mapa municipal de saúde de Ribeirão Preto. As unidades também estão na lista abaixo.").assertExists()
+  tap("Só pronto atendimento municipal",true)
+  ui.onNodeWithText("5 unidades encontradas").assertExists()
+  val search=ui.onNode(hasSetTextAction() and hasText("Buscar unidade ou endereço"))
+  search.performScrollTo().performTextInput("ribeirao verde")
+  Espresso.closeSoftKeyboard()
+  tap("UPA Ribeirão Verde · Pronto atendimento municipal",true)
+  ui.onNodeWithText("UPA Ribeirão Verde").assertExists()
+  search.performTextReplacement("local-inexistente")
+  ui.onNodeWithText("0 unidades encontradas").assertExists()
+ }
  @Test fun unavailableNearbyDoesNotBlockOfflineFeatures(){
   val context=ApplicationProvider.getApplicationContext<Context>()
   org.junit.Assume.assumeFalse(NearbySession(context).available())
