@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "Convite pessoal implementado no código",
+      "description": "O Android e o serviço de convites já têm código para recuperar um convite após a instalação e vincular os dois contatos. O serviço passou por verificação isolada. A ativação pública e a validação da instalação pela Google Play seguem pendentes."
+    },
+    {
+      "date": "2026-11-09",
       "title": "Convite pessoal definido no roteiro",
       "description": "O convite pessoal levará ao download. Na primeira abertura pelo convite, as duas pessoas serão vinculadas como contatos automaticamente. O fluxo está planejado."
     },

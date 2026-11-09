@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
       - run: node --test checkout.test.mjs pix.test.mjs energy.test.mjs
   android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -32,7 +32,7 @@ jobs:
           distribution: temurin
           java-version: '17'
       - name: Install Android platform
-        run: sdkmanager 'platforms;android-36' 'build-tools;35.0.0'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"'
       - name: Core, compilation, lint and unsigned production bundle
         working-directory: android
         run: bash ./gradlew :core:verifyCore :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug :app:bundleRelease --no-daemon

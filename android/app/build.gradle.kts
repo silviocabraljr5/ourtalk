@@ -15,6 +15,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2025.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     implementation(project(":core"))
+    implementation("com.android.installreferrer:installreferrer:2.2")
     implementation("com.google.android.gms:play-services-nearby:19.5.1")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
     implementation(platform("androidx.compose:compose-bom:2025.10.01"))

@@ -18,9 +18,17 @@ class LocalRepository(context: Context) {
   List(json.length()) { index -> val g=json.getJSONObject(index); Guide(g.getString("id"),g.getString("title"),g.getString("category"),g.getString("body"),g.getString("source"),g.getString("sourceUrl"),g.getString("reviewedAt")) }
  }
  private fun array(key: String): JSONArray = JSONArray(preferences.getString(key,"[]"))
- fun contacts(): List<SavedContact> {val a=array("contacts");return List(a.length()){i->val c=a.getJSONObject(i);SavedContact(c.getString("id"),c.getString("name"))}}
- fun addContact(name: String): SavedContact { val value=name.trim();require(value.isNotEmpty()&&value.length<=80);val all=contacts();require(all.size<100);val contact=SavedContact(UUID.randomUUID().toString(),value);saveContacts(all+contact);return contact }
- private fun saveContacts(contacts: List<SavedContact>) {val a=JSONArray();contacts.forEach {a.put(JSONObject().put("id",it.id).put("name",it.name))};preferences.edit().putString("contacts",a.toString()).apply()}
+ private fun readContacts(key: String): List<SavedContact> {
+  val entries = array(key)
+  return List(entries.length()) { i ->
+   val contact = entries.getJSONObject(i)
+   SavedContact(contact.getString("id"), contact.getString("name"))
+  }
+ }
+ fun contacts(): List<SavedContact> = readContacts("contacts") + readContacts("invited-contacts")
+ fun addContact(name: String): SavedContact { val value=name.trim();require(value.isNotEmpty()&&value.length<=80);val all=readContacts("contacts");require(all.size<100);val contact=SavedContact(UUID.randomUUID().toString(),value);saveContacts("contacts",all+contact);return contact }
+ fun syncInvitedContacts(contacts: List<SavedContact>) = saveContacts("invited-contacts", contacts)
+ private fun saveContacts(key: String, contacts: List<SavedContact>) {val a=JSONArray();contacts.forEach {a.put(JSONObject().put("id",it.id).put("name",it.name))};preferences.edit().putString(key,a.toString()).apply()}
  fun draft(id: String): String = preferences.getString("draft-$id","") ?: ""
  fun saveDraft(id: String,text: String) {require(threads().any{it.id==id});require(text.length<=2000);preferences.edit().putString("draft-$id",text).apply()}
  fun tasks(): List<PreparationTask> {

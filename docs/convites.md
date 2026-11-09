@@ -1,0 +1,9 @@
+# Convites pessoais
+
+Em Conversas → Contatos, o Android cria um link pessoal da Google Play. O código do convite acompanha a instalação. Na primeira abertura, o app recupera o código e pede o nome que a outra pessoa verá. Ao continuar, o serviço cria os dois vínculos sem exigir que os usuários adicionem o contato manualmente. Quem convidou recebe o contato ao reabrir Conversas com internet. Os vínculos sincronizados permanecem disponíveis no aparelho.
+
+Cada link vale por sete dias e pode vincular um aparelho. Repetir o resgate pelo mesmo aparelho, dentro desse prazo, não duplica o vínculo. O serviço rejeita o resgate pelo próprio emissor ou por um terceiro após o primeiro uso. A transação SQLite grava os dois lados em conjunto. O identificador secreto do aparelho fica no armazenamento protegido do Android e segue por HTTPS. O serviço guarda somente seu hash, os nomes escolhidos e os vínculos. A agenda, a posição e o conteúdo das conversas não fazem parte dessa operação.
+
+O endpoint fica inativo quando o diretório privado `ourtalk-invite-data` não existe ao lado da raiz pública. Antes de ativá-lo, concluir os controles de exclusão e retenção, ajustar a política de privacidade e a ficha de segurança dos dados e validar o fluxo de instalação e reabertura em dois aparelhos. Links já abertos em aparelhos com o app instalado e a entrega de mensagens remotas ficam para etapas separadas.
+
+Validação do servidor em ambiente isolado com PHP e SQLite da hospedagem. A criação, o vínculo nos dois sentidos, a repetição sem duplicidade, a rejeição de autorresgate e de terceiros e a expiração passaram. A instalação real pela Play Store ainda precisa ser conferida. O [Install Referrer da Google Play](https://developer.android.com/google/play/installreferrer/library) transporta a referência após a instalação.

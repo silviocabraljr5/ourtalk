@@ -24,9 +24,10 @@ import androidx.compose.ui.unit.dp
 import java.text.DateFormat
 import java.util.Date
 
-@Composable fun InboxScreen(repository:LocalRepository,nearby:NearbySession,onNearbyOpen:()->Unit,onOpen:(String)->Unit){
+@Composable fun InboxScreen(repository:LocalRepository,nearby:NearbySession,inviteRevision:Int=0,onInvite:()->Unit={},onNearbyOpen:()->Unit,onOpen:(String)->Unit){
  var tab by rememberSaveable{mutableStateOf("conversations")};var query by remember{mutableStateOf("")};var groupsOnly by rememberSaveable{mutableStateOf(false)}
  var contacts by remember{mutableStateOf(repository.contacts())};var threads by remember{mutableStateOf(repository.threads())}
+ LaunchedEffect(inviteRevision) { contacts = repository.contacts() }
  var addPerson by rememberSaveable{mutableStateOf(false)};var newGroup by rememberSaveable{mutableStateOf(false)};var newChat by rememberSaveable{mutableStateOf(false)};var error by remember{mutableStateOf("")}
  ScreenTitle("Conversas")
  OutlinedTextField(value=query,onValueChange={if(it.length<=80)query=it},label={Text("Buscar conversa ou pessoa")},leadingIcon={Icon(Icons.Outlined.Search,null)},modifier=Modifier.fillMaxWidth(),singleLine=true)
@@ -36,6 +37,7 @@ import java.util.Date
    NearbyControls(nearby,onNearbyOpen)
   }
   "contacts"->{
+   Button(onClick=onInvite,modifier=Modifier.fillMaxWidth()){Text("Convidar para meus contatos")}
    OutlinedButton(onClick={addPerson=true},enabled=contacts.size<100,modifier=Modifier.fillMaxWidth()){Icon(Icons.Outlined.PersonAdd,null);Text(" Adicionar pessoa")}
    val filtered=contacts.filter{it.name.contains(query,true)}.sortedBy{it.name.lowercase()}
    if(filtered.isEmpty())Text("Seus contatos adicionados aparecerão aqui.",color=Color(0xFF9DACB0))
