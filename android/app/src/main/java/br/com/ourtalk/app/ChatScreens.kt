@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import java.text.DateFormat
 import java.util.Date
 
-@Composable fun InboxScreen(repository:LocalRepository,onOpen:(String)->Unit){
- var tab by rememberSaveable{mutableStateOf("conversations")};var query by rememberSaveable{mutableStateOf("")};var groupsOnly by rememberSaveable{mutableStateOf(false)}
+@Composable fun InboxScreen(repository:LocalRepository,nearby:NearbySession,onNearbyOpen:()->Unit,onOpen:(String)->Unit){
+ var tab by rememberSaveable{mutableStateOf("conversations")};var query by remember{mutableStateOf("")};var groupsOnly by rememberSaveable{mutableStateOf(false)}
  var contacts by remember{mutableStateOf(repository.contacts())};var threads by remember{mutableStateOf(repository.threads())}
  var addPerson by rememberSaveable{mutableStateOf(false)};var newGroup by rememberSaveable{mutableStateOf(false)};var newChat by rememberSaveable{mutableStateOf(false)};var error by remember{mutableStateOf("")}
  ScreenTitle("Conversas")
@@ -33,8 +33,7 @@ import java.util.Date
  ScrollableTabRow(selectedTabIndex=when(tab){"contacts"->1;"nearby"->2;else->0},edgePadding=0.dp){listOf("conversations" to "Conversas","contacts" to "Contatos","nearby" to "Por perto").forEach{(key,title)->Tab(modifier=Modifier.testTag("chat-tab-$key"),selected=tab==key,onClick={tab=key},text={Text(title)})}}
  when(tab){
   "nearby"->{
-   InfoCard("Descoberta desligada","Quando você ativar a descoberta, outros usuários próximos que também autorizarem poderão aparecer aqui. Conversar com alguém por perto não exigirá salvar essa pessoa nos contatos.")
-   Text("A conexão próxima ainda está em desenvolvimento. Nenhuma pessoa ou aparelho está sendo procurado nesta versão.",style=MaterialTheme.typography.bodySmall,color=Color(0xFF9DACB0))
+   NearbyControls(nearby,onNearbyOpen)
   }
   "contacts"->{
    OutlinedButton(onClick={addPerson=true},enabled=contacts.size<100,modifier=Modifier.fillMaxWidth()){Icon(Icons.Outlined.PersonAdd,null);Text(" Adicionar pessoa")}
@@ -51,13 +50,13 @@ import java.util.Date
   }
  }
  if(error.isNotEmpty())Text(error,color=MaterialTheme.colorScheme.error)
- if(addPerson){var name by rememberSaveable{mutableStateOf("")};AlertDialog(onDismissRequest={addPerson=false},title={Text("Adicionar pessoa")},text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){Text("Salve uma referência neste aparelho. Conectar e confirmar a identidade serão etapas separadas.");OutlinedTextField(value=name,onValueChange={if(it.length<=80)name=it},label={Text("Nome")},singleLine=true)}},confirmButton={TextButton(enabled=name.isNotBlank(),onClick={runCatching{repository.addContact(name)}.onSuccess{contacts=repository.contacts();addPerson=false}.onFailure{error="Não foi possível salvar esse contato."}}){Text("Salvar")}},dismissButton={TextButton(onClick={addPerson=false}){Text("Cancelar")}})}
+ if(addPerson){var name by remember{mutableStateOf("")};AlertDialog(onDismissRequest={addPerson=false},title={Text("Adicionar pessoa")},text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){Text("Salve uma referência neste aparelho. Conectar e confirmar a identidade serão etapas separadas.");OutlinedTextField(value=name,onValueChange={if(it.length<=80)name=it},label={Text("Nome")},singleLine=true)}},confirmButton={TextButton(enabled=name.isNotBlank(),onClick={runCatching{repository.addContact(name)}.onSuccess{contacts=repository.contacts();addPerson=false}.onFailure{error="Não foi possível salvar esse contato."}}){Text("Salvar")}},dismissButton={TextButton(onClick={addPerson=false}){Text("Cancelar")}})}
  if(newChat){AlertDialog(onDismissRequest={newChat=false},title={Text("Nova conversa")},text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){if(contacts.isEmpty())Text("Adicione uma pessoa para começar.");LazyColumn(Modifier.heightIn(max=300.dp)){items(contacts,key={it.id}){person->TextButton(onClick={runCatching{repository.directThread(person)}.onSuccess{newChat=false;onOpen(it.id)}.onFailure{error="Não foi possível abrir a conversa."}}){Text(person.name)}}}}},confirmButton={TextButton(onClick={newChat=false;addPerson=true}){Text("Adicionar pessoa")}},dismissButton={TextButton(onClick={newChat=false}){Text("Voltar")}})}
  if(newGroup)GroupCreationDialog(contacts,onDismiss={newGroup=false},onCreate={name,members->runCatching{repository.createGroup(name,members)}.onSuccess{threads=repository.threads();newGroup=false;onOpen(it.id)}.onFailure{error="Confira o nome e os participantes do grupo."}})
 }
 
 @Composable private fun GroupCreationDialog(contacts:List<SavedContact>,onDismiss:()->Unit,onCreate:(String,List<String>)->Unit){
- var name by rememberSaveable{mutableStateOf("")};var selected by remember{mutableStateOf(emptySet<String>())}
+ var name by remember{mutableStateOf("")};var selected by remember{mutableStateOf(emptySet<String>())}
  AlertDialog(onDismissRequest=onDismiss,title={Text("Novo grupo")},text={Column(verticalArrangement=Arrangement.spacedBy(12.dp)){
   OutlinedTextField(value=name,onValueChange={if(it.length<=60)name=it},label={Text("Nome do grupo")},singleLine=true)
   Text("Participantes",style=MaterialTheme.typography.labelLarge)
@@ -71,7 +70,7 @@ import java.util.Date
 @Composable fun ChatThreadScreen(repository:LocalRepository,threadId:String,onBack:()->Unit){
  val thread=remember(threadId){repository.threads().find{it.id==threadId}}
  if(thread==null){onBack();return}
- var messages by remember(threadId){mutableStateOf(repository.messages(threadId))};var text by rememberSaveable(threadId){mutableStateOf(repository.draft(threadId))};var info by rememberSaveable{mutableStateOf(false)};var error by remember{mutableStateOf("")};val listState=rememberLazyListState()
+ var messages by remember(threadId){mutableStateOf(repository.messages(threadId))};var text by remember(threadId){mutableStateOf(repository.draft(threadId))};var info by rememberSaveable{mutableStateOf(false)};var error by remember{mutableStateOf("")};val listState=rememberLazyListState()
  LaunchedEffect(messages.size){if(messages.isNotEmpty())listState.animateScrollToItem(messages.lastIndex)}
  Scaffold(topBar={TopAppBar(navigationIcon={IconButton(onClick=onBack){Icon(Icons.AutoMirrored.Outlined.ArrowBack,"Voltar às conversas")}},title={Column{Text(thread.title,maxLines=1,overflow=TextOverflow.Ellipsis);Text(if(thread.group)"Grupo · ${thread.memberIds.size+1} participantes locais" else "Conversa local",style=MaterialTheme.typography.labelSmall,color=Color(0xFF9DACB0))}},actions={if(thread.group)IconButton(onClick={info=true}){Icon(Icons.Outlined.Group,"Participantes")}})},bottomBar={Surface(color=Color(0xFF142129),modifier=Modifier.imePadding().navigationBarsPadding()){Column(Modifier.padding(12.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){if(error.isNotEmpty())Text(error,color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall);Row(verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(8.dp)){OutlinedTextField(value=text,onValueChange={if(it.length<=2000){text=it;repository.saveDraft(threadId,it)}},placeholder={Text("Mensagem")},modifier=Modifier.weight(1f).testTag("message-composer"),maxLines=5);FilledIconButton(modifier=Modifier.testTag("store-message"),enabled=text.isNotBlank(),onClick={runCatching{repository.saveLocalMessage(threadId,text)}.onSuccess{messages=repository.messages(threadId);text="";repository.saveDraft(threadId,"");error=""}.onFailure{error="Não foi possível salvar outra mensagem local."}}){Icon(Icons.AutoMirrored.Outlined.Send,"Salvar mensagem neste aparelho")}}}}}){padding->
   Column(Modifier.fillMaxSize().padding(padding)){

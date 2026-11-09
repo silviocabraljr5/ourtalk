@@ -12,12 +12,12 @@ data class LocalMessage(val id:String,val body:String,val createdAt:Long)
 data class PreparationTask(val id: String, val title: String, val done: Boolean)
 
 class LocalRepository(context: Context) {
- private val preferences = context.applicationContext.getSharedPreferences("ourtalk-local-v1", Context.MODE_PRIVATE)
+ private val preferences = SecureStore(context, "ourtalk-local-v1")
  val guides: List<Guide> = context.assets.open("guides.json").bufferedReader().use { reader ->
   val json=JSONArray(reader.readText())
   List(json.length()) { index -> val g=json.getJSONObject(index); Guide(g.getString("id"),g.getString("title"),g.getString("category"),g.getString("body"),g.getString("source"),g.getString("sourceUrl"),g.getString("reviewedAt")) }
  }
- private fun array(key: String): JSONArray = try { JSONArray(preferences.getString(key,"[]")) } catch (_: Exception) { JSONArray() }
+ private fun array(key: String): JSONArray = JSONArray(preferences.getString(key,"[]"))
  fun contacts(): List<SavedContact> {val a=array("contacts");return List(a.length()){i->val c=a.getJSONObject(i);SavedContact(c.getString("id"),c.getString("name"))}}
  fun addContact(name: String): SavedContact { val value=name.trim();require(value.isNotEmpty()&&value.length<=80);val all=contacts();require(all.size<100);val contact=SavedContact(UUID.randomUUID().toString(),value);saveContacts(all+contact);return contact }
  private fun saveContacts(contacts: List<SavedContact>) {val a=JSONArray();contacts.forEach {a.put(JSONObject().put("id",it.id).put("name",it.name))};preferences.edit().putString("contacts",a.toString()).apply()}
@@ -28,7 +28,7 @@ class LocalRepository(context: Context) {
   val a=array("tasks");return List(a.length()){i->val t=a.getJSONObject(i);PreparationTask(t.getString("id"),t.getString("title"),t.getBoolean("done"))}
  }
  fun saveTasks(tasks: List<PreparationTask>) {require(tasks.size<=100);val a=JSONArray();tasks.forEach{require(it.title.isNotBlank()&&it.title.length<=160);a.put(JSONObject().put("id",it.id).put("title",it.title).put("done",it.done))};preferences.edit().putString("tasks",a.toString()).apply()}
- fun favorites(): Set<String> = preferences.getStringSet("favorites",emptySet())?.toSet() ?: emptySet()
+ fun favorites(): Set<String> = preferences.getStringSet("favorites",emptySet()).toSet()
  fun toggleFavorite(id: String) {require(guides.any{it.id==id});val set=favorites().toMutableSet();if(!set.add(id))set.remove(id);preferences.edit().putStringSet("favorites",set).apply()}
 
  fun threads(): List<ChatThread> {val a=array("threads");return List(a.length()){i->val t=a.getJSONObject(i);val members=t.getJSONArray("members");ChatThread(t.getString("id"),t.getString("title"),t.getBoolean("group"),List(members.length()){members.getString(it)},t.getLong("updatedAt"))}.sortedByDescending{it.updatedAt}}

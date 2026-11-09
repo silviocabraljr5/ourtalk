@@ -1,34 +1,51 @@
-# OurTalk Android — versão interna 0.1
+# OurTalk Android — versão interna 0.2
 
-Aplicativo nativo em Kotlin/Jetpack Compose. Identidade escura com verde; navegação Início, Conversas, TalK e Mapa. Recursos fica no cabeçalho.
+Aplicativo nativo Kotlin/Jetpack Compose. Identidade escura com verde; navegação Início, Conversas, TalK e Mapa. Recursos fica no cabeçalho. Nenhum lançamento na Play Store nesta etapa.
 
 ## Implementado
 
-- Biblioteca incluída no app, fontes e datas de revisão.
-- Busca offline por palavras com TalK; não é IA generativa nesta etapa.
-- Favoritos e checklist persistentes, com inclusão de itens.
-- Contatos de referência, conversas locais, criação de grupos, participantes e mensagens em balões.
-- Históricos persistentes, sem falsas confirmações de envio ou leitura.
-- Consulta GPS sob permissão explícita, precisão e horário da leitura; salvar a última posição é opcional. Sem acesso em segundo plano.
-- Compartilhamento voluntário do link público do projeto.
+- Biblioteca incluída, fontes, datas de revisão, busca offline por palavras com TalK, favoritos e checklist.
+- Contatos de referência, chats e grupos locais; mensagens e rascunhos persistentes, sem falsas confirmações de entrega/leitura.
+- Dados locais e posição opcional cifrados com AES-256-GCM/Android Keystore. Migração do formato anterior sem fallback para texto aberto.
+- Consulta GPS por ação e permissão explícitas, com precisão e horário; sem acesso em segundo plano.
+- Conexão próxima individual experimental via Nearby Connections 19.5.1: opt-in por dez minutos, apelido temporário, comparação de código obrigatória, aceite bilateral, mensagens de texto e confirmação do aplicativo receptor.
+- Conversar por perto não exige salvar contato. A sessão termina ao sair do app; histórico próximo é temporário, somente em memória.
+- Compartilhamento voluntário do endereço público do projeto.
 
-Ainda não há transporte de mensagens, descoberta de pessoas próximas, mapa baixado, rotas, IA generativa ou criptografia de ponta a ponta. A aba Por perto descreve o fluxo planejado e não exibe pessoas fictícias. Veja `docs/conversas-e-proximos.md`.
+## Limitações
 
-## Dados
+O transporte de rádio **ainda precisa ser validado em dois aparelhos físicos**. Google Play Services e Bluetooth/Wi-Fi compatíveis são necessários. O aparelho precisa manter os rádios ligados, mesmo sem internet/operadora. Não há alcance ilimitado ou garantia de disponibilidade. O SDK Google é uma dependência com licença própria e pode coletar diagnósticos conforme as configurações de Uso e diagnóstico do aparelho. Sem Play Services, os recursos locais continuam disponíveis.
 
-Dados pessoais permanecem na área privada do app. Backup e transferência automática estão excluídos nas regras Android. A desinstalação remove os dados locais. Esta versão não declara permissão de internet, contatos, câmera, microfone ou localização em segundo plano. Permissões de localização são solicitadas apenas na função de GPS.
+Grupos continuam locais, sem convites ou chaves de grupo de rede. Nomes de contatos não autenticam usuários próximos. Não há identidade permanente de rede, bloqueio persistente, envio pela internet, retransmissão, mapas baixados, rotas ou IA generativa. TalK é busca de conteúdos. Pedir ajuda não envia SOS. Mensagens locais antigas nunca são transmitidas automaticamente.
 
-## Compilar
+Leia docs/seguranca.md, docs/conversas-e-proximos.md e docs/testes-dois-aparelhos.md. O escopo completo está em ../ROADMAP.md.
 
-JDK 17, Android SDK 36 e Build Tools 35.0.0. Configure seu SDK em `local.properties`, que não é versionado. No Windows:
+## Dados e permissões
+
+Backup e transferência automática excluídos. Desinstalar remove dados e chave, sem recuperação implementada. A chave não exportável não impede leitura em aparelho desbloqueado ou processo comprometido. Não existe promessa de proteção contra root/malware ou de apagamento forense.
+
+GPS pede localização somente na função. Proximidade pede Bluetooth/wi-fi próximos em Android recente; Android até 12L também requer localização para descoberta. Essa função não lê coordenadas. Sem agenda, câmera, microfone ou localização em segundo plano. Revisar sempre o manifesto mesclado das dependências.
+
+## Compilar e verificar
+
+JDK 17, SDK 36 e Build Tools 35.0.0. Kotlin 2.4.21 é compatível com o metadata do Nearby atual. R8 9.5.29 está fixado explicitamente para suportar Kotlin 2.4 mantendo AGP 8.13.2; revisar o conjunto ao atualizar. Wrapper Gradle tem checksum fixado. Configure sdk.dir em local.properties, ignorado pelo Git.
 
 ```sh
-gradlew.bat :core:verifyCore :app:assembleDebug :app:lintDebug
-gradlew.bat :app:assembleDebugAndroidTest
+gradlew.bat :core:verifyCore :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug :app:bundleRelease --no-daemon
 ```
 
-Os APKs de teste usam o pacote br.com.ourtalk.app.dev. Em um emulador/aparelho de teste com recursos suficientes, execute `gradlew.bat :app:connectedDebugAndroidTest`. Em máquinas limitadas, compile os dois APKs antes de iniciar o emulador e execute a instrumentação via adb.
+No Linux: bash ./gradlew com as mesmas tarefas. O workflow ../.github/workflows/checks.yml valida compilação, núcleo, lint e testes do site; não publica releases, não usa chaves e não testa rádios físicos.
+
+Pacote debug: br.com.ourtalk.app.dev. Pacote release: br.com.ourtalk.app. Cada um usa serviceId distinto; instalar o mesmo tipo nos dois aparelhos para descoberta.
+
+```sh
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+adb shell am instrument -w br.com.ourtalk.app.dev.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+A instrumentação limpa somente os dados do aplicativo de teste; use um aparelho/emulador de teste. Em computadores com pouca memória, compile antes de iniciar o emulador e execute a instrumentação pelo adb.
 
 ## Google Play
 
-O pacote de produção é br.com.ourtalk.app. O comando `gradlew.bat :app:bundleRelease` gera o AAB; assinatura de produção e conta Play Console ainda precisam ser configuradas. A publicação foi autorizada para quando os recursos estiverem prontos e validados. Consulte `release/PUBLICACAO.md`.
+AAB em app/build/outputs/bundle/release/app-release.aab, sem assinatura de produção. Chave de upload não deve entrar no Git. Publicação autorizada para quando estiver pronto e validado; gates e requisitos em release/PUBLICACAO.md.

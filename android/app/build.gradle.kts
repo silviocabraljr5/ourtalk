@@ -2,7 +2,7 @@ plugins { id("com.android.application"); id("org.jetbrains.kotlin.android"); id(
 android {
     namespace = "br.com.ourtalk.app"
     compileSdk = 36
-    defaultConfig { applicationId = "br.com.ourtalk.app"; minSdk = 26; targetSdk = 36; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"; versionCode = 1; versionName = "0.1.0" }
+    defaultConfig { applicationId = "br.com.ourtalk.app"; minSdk = 26; targetSdk = 36; testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"; versionCode = 2; versionName = "0.2.0" }
     buildFeatures { compose = true; buildConfig = true }
     buildTypes { getByName("debug") { applicationIdSuffix = ".dev"; versionNameSuffix = "-dev" }; getByName("release") { isMinifyEnabled = true; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro") } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
@@ -15,6 +15,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2025.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     implementation(project(":core"))
+    implementation("com.google.android.gms:play-services-nearby:19.5.1")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
     implementation(platform("androidx.compose:compose-bom:2025.10.01"))
     implementation("androidx.activity:activity-compose:1.11.0")

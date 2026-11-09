@@ -62,7 +62,9 @@ private class GpsReader(context:Context) {
 @Composable fun PositionScreen(){
  val context=LocalContext.current;val lifecycleOwner=LocalLifecycleOwner.current
  val reader=remember{GpsReader(context)}
- val preferences=remember{context.getSharedPreferences("ourtalk-position-v1",Context.MODE_PRIVATE)}
+ val stored=remember{runCatching{SecureStore(context,"ourtalk-position-v1")}}
+ val preferences=stored.getOrNull()
+ if(preferences==null){InfoCard("Posição salva indisponível","Não foi possível abrir os dados protegidos. Feche e abra o app para tentar novamente. A posição salva não foi apagada.");return}
  fun readSaved():PositionFix?=try{if(!preferences.contains("latitude"))null else PositionFix(preferences.getString("latitude",null)!!.toDouble(),preferences.getString("longitude",null)!!.toDouble(),preferences.getFloat("accuracy",0f),preferences.getLong("time",0L),preferences.getBoolean("mock",false))}catch(_:Exception){null}
  var fix by remember{mutableStateOf(readSaved())};var fromSaved by remember{mutableStateOf(fix!=null)}
  var busy by remember{mutableStateOf(false)};var message by remember{mutableStateOf("")};var save by remember{mutableStateOf(false)}

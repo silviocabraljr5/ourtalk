@@ -4,7 +4,7 @@ Projeto de comunicação, informação e apoio entre pessoas, pensado para prepa
 
 ## Estágio atual
 
-Site de apresentação, protótipo navegável e Pix Copia e Cola para contribuições. Comunicação local, navegação offline, TalK com IA e criptografia ainda precisam ser desenvolvidos e validados. Não há aplicativo pronto para download.
+Site publicado, protótipo navegável, cadastro de lançamento, calculadora de energia e Pix Copia e Cola. Aplicativo Android interno em desenvolvimento: biblioteca/checklist offline, contatos/grupos locais e conexão próxima experimental. Não há lançamento público na Play Store. Navegação offline, grupos de rede, transporte por internet e TalK com IA continuam pendentes. Consulte [android/README.md](android/README.md) e [ROADMAP.md](ROADMAP.md).
 
 ## Contribuir
 
@@ -21,7 +21,7 @@ node server.mjs
 Abra http://localhost:8080. Arquivos estáticos em `dist/`.
 
 ```sh
-node --test checkout.test.mjs pix.test.mjs
+node --test checkout.test.mjs pix.test.mjs energy.test.mjs
 ```
 
 Os testes não realizam pagamentos.
@@ -55,7 +55,7 @@ O código original do projeto é disponibilizado sob a licença MIT (veja LICENS
 
 
 ## Aplicativo Android
-Base nativa em `android/`, com Kotlin/Compose, navegação e checklist local. Compilação da APK depende do Android SDK 36, ainda ausente neste ambiente. O núcleo de consentimento foi compilado com Java 17 e suas transições foram verificadas.
+Código nativo em `android/`, com Kotlin/Compose e Android SDK 36. A versão interna 0.2 inclui proteção local com Android Keystore e integração experimental Nearby Connections, com comparação de código obrigatória. A comunicação de rádio depende de validação em dois aparelhos físicos; não apresentar a compilação ou testes de emulador como prova de alcance ou entrega real. Leia [SECURITY.md](SECURITY.md) antes de contribuir.
 
 ## Cadastro e energia
 O cadastro de lançamento funciona em PHP na hospedagem; leia `docs/cadastro-lancamento.md`. A calculadora usa `dist/energy.mjs`; veja `docs/calculadora-energia.md`.

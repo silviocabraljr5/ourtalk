@@ -1,0 +1,42 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: node --test checkout.test.mjs pix.test.mjs energy.test.mjs
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Android platform
+        run: sdkmanager 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Core, compilation, lint and unsigned production bundle
+        working-directory: android
+        run: bash ./gradlew :core:verifyCore :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug :app:bundleRelease --no-daemon
+      - name: Verify merged production manifest
+        working-directory: android
+        run: python3 tools/verify_manifest.py app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
+      # Physical radio/GNSS tests cannot be replaced by this job. No release signing or deployment here.

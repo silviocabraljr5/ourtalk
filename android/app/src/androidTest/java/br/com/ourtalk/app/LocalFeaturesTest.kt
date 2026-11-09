@@ -11,10 +11,21 @@ import org.junit.Test
 
 class LocalFeaturesTest {
  @get:Rule val ui=createAndroidComposeRule<MainActivity>()
- @Before fun resetOwnedTestData(){val context=ApplicationProvider.getApplicationContext<Context>();context.getSharedPreferences("ourtalk-local-v1",Context.MODE_PRIVATE).edit().clear().commit();context.getSharedPreferences("ourtalk-position-v1",Context.MODE_PRIVATE).edit().clear().commit()}
+ @Before fun resetOwnedTestData(){val context=ApplicationProvider.getApplicationContext<Context>();context.getSharedPreferences("ourtalk-encrypted-v1",Context.MODE_PRIVATE).edit().clear().commit();context.getSharedPreferences("ourtalk-local-v1",Context.MODE_PRIVATE).edit().clear().commit();context.getSharedPreferences("ourtalk-position-v1",Context.MODE_PRIVATE).edit().clear().commit()}
  private fun tap(text:String,scroll:Boolean=false){val node=ui.onNodeWithText(text,useUnmergedTree=false);if(scroll)node.performScrollTo();node.performTouchInput{click()}}
  private fun nav(tag:String){ui.onNodeWithTag("nav-$tag").performClick()}
  private fun field(label:String,value:String){ui.onNode(hasSetTextAction() and hasText(label)).performTextInput(value)}
+ @Test fun unavailableNearbyDoesNotBlockOfflineFeatures(){
+  val context=ApplicationProvider.getApplicationContext<Context>()
+  org.junit.Assume.assumeFalse(NearbySession(context).available())
+  nav("CONTACTS")
+  ui.onNodeWithTag("chat-tab-nearby").performClick()
+  ui.onNodeWithTag("nearby-start").performScrollTo().performClick()
+  ui.onNodeWithText("Google Play Services não está disponível para a conexão próxima neste aparelho.").assertExists()
+  nav("TALK")
+  field("Buscar conteúdo salvo","bateria")
+  ui.onNodeWithText("Fazer a bateria durar mais").assertExists()
+ }
  @Test fun offlineLibrarySearchAndChecklistSurviveRecreation(){
   tap("Biblioteca",true)
   tap("Fazer a bateria durar mais",true)

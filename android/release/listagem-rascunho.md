@@ -8,6 +8,6 @@ O OurTalk reúne conteúdos salvos, preparação pessoal e recursos de apoio em 
 
 A consulta de localização usa o GPS quando autorizada por você. Mostramos horário e precisão da leitura; a posição não é enviada a contatos. Nenhum mapa ou rota está incluído nesta versão.
 
-Comunicação entre aparelhos, descoberta próxima, mapas e IA generativa permanecem em desenvolvimento. Esta versão não envia mensagens ou SOS. Não apresentar a versão interna como aplicativo de emergência concluído.
+Uma conexão próxima individual está implementada experimentalmente com Google Play Services, Bluetooth/Wi-Fi e comparação de código, mas precisa de validação em dois aparelhos físicos antes de divulgação. Grupos de rede, mapas/rotas, envio pela internet e IA generativa permanecem em desenvolvimento. Esta versão não envia SOS. Não apresentar a versão interna como aplicativo de emergência concluído.
 
 Esta listagem não foi criada ou publicada no Play Console.

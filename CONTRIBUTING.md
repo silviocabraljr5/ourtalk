@@ -4,7 +4,7 @@ Toda ajuda é bem-vinda: código, design, documentação, testes, acessibilidade
 
 ## Comece por aqui
 
-1. Leia o README para entender o estágio atual: apresentação e protótipo navegável. O aplicativo de comunicação offline ainda será desenvolvido.
+1. Leia o README, ROADMAP.md, SECURITY.md e android/README.md. O site está publicado; o Android é uma versão interna, com comunicação próxima experimental ainda sem validação física.
 2. Consulte as issues antes de abrir uma sugestão. Descreva o problema real, quem é afetado e como a proposta ajuda.
 3. Para mudanças maiores, abra uma issue antes de implementar. Mudanças pequenas podem seguir direto para um pull request.
 4. Faça um fork, crie uma branch e mantenha a alteração focada.
@@ -21,10 +21,12 @@ node server.mjs
 Abra http://localhost:8080. Para testar os módulos de pagamento sem realizar cobranças:
 
 ```sh
-node --test checkout.test.mjs pix.test.mjs
+node --test checkout.test.mjs pix.test.mjs energy.test.mjs
 ```
 
 ## Onde você pode ajudar
+
+Para Android, use JDK 17/SDK 36 e execute `gradlew.bat :core:verifyCore :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug` dentro de android. No Linux, use `bash ./gradlew` com as mesmas tarefas. Execute a instrumentação em dispositivo de teste; o CI de compilação não substitui testes de rádio. Documente o resultado real e marque como pendente o que não executou.
 
 - Comunicação local entre aparelhos e confirmação de entrega.
 - Mapas, localização e rotas offline.

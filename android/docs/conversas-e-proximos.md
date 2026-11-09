@@ -4,11 +4,17 @@
 
 Conversas usa uma lista familiar de chats individuais e grupos, busca por nome, filtros e criação de grupo. O contato salvo é uma referência independente da sessão de comunicação. Pessoas próximas ficam em uma aba separada; uma conversa temporária não exige adicioná-las à agenda.
 
-## Primeira versão interna
+## Históricos locais (desde 0.1)
 
-Contatos, grupos, participantes de referência e mensagens LOCAL_ONLY são persistidos no aparelho. Não existe envio, recebimento, descoberta de dispositivos ou confirmação de leitura. Não mostrar dois tiques, online ou entregue sem evento real do transporte. Mensagens LOCAL_ONLY não devem ser enviadas automaticamente por uma atualização futura.
+Contatos, grupos, participantes de referência e mensagens LOCAL_ONLY são persistidos no aparelho. Esses históricos não têm envio, recebimento ou confirmação de leitura. Mensagens LOCAL_ONLY nunca são enviadas automaticamente pela integração próxima da 0.2.
 
-## Próxima etapa de transporte
+## Conexão próxima experimental (0.2)
+
+Implementado em código: Nearby P2P_POINT_TO_POINT, apelido temporário, ativação de até dez minutos, comparação de código obrigatória, aceite dos dois aparelhos, texto e confirmação do app receptor. O histórico dessa sessão é separado, fica na memória e é apagado ao encerrar ou sair do app. Conversar não exige adicionar contato. O envio só é liberado depois de o SDK concluir a conexão e o consentimento local estar confirmado.
+
+O rádio ainda depende de validação em dois Androids físicos; o responsável dispõe atualmente de apenas um Android. Emulador não substitui esse gate. Ver docs/testes-dois-aparelhos.md e docs/seguranca.md. Não há identidade permanente, bloqueio persistente, grupos de rede, fila, retry automático, internet ou retransmissão.
+
+## Requisitos para evolução do transporte
 
 - Ativar visibilidade/descoberta por ação explícita, com prazo e indicação visível; interromper a sessão quando desativada.
 - Anunciar um identificador temporário e capacidades do app. Não transmitir documentos, saúde, lista de contatos ou GPS no anúncio de presença.

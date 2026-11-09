@@ -27,6 +27,8 @@ Fontes oficiais:
 - https://support.google.com/googleplay/android-developer/answer/9859152?hl=pt-BR
 - https://support.google.com/googleplay/android-developer/answer/14151465
 
-## Primeira versão interna 0.1
+## Versão interna 0.2 — não publicar como produção
 
-Guias incluídos no app, busca offline por palavras, favoritos, checklist, contatos de referência, rascunhos locais e consulta GPS por ação explícita. Ainda não há transporte de mensagens, descoberta próxima, mapas baixados, rotas ou modelo generativo conectado ao TalK.
+Guias, busca por palavras, favoritos, checklist, contatos/grupos locais, GPS sob permissão, armazenamento AES-GCM/Keystore e integração experimental Nearby individual com comparação de código. O rádio ainda não foi validado em dois aparelhos físicos. O responsável dispõe de apenas um Android neste momento. Não há grupos de rede, identidade permanente, bloqueio persistente, transporte pela internet, mapas/rotas ou TalK generativa.
+
+Revisar a política de privacidade e Data Safety com a coleta de diagnósticos do Google Play Services. Testar o artefato release reduzido, todas as versões suportadas e os gates em ../docs/testes-dois-aparelhos.md. Nenhuma chave de produção, envio ao Play Console ou anúncio de disponibilidade é parte da compilação/CI.
