@@ -10,6 +10,8 @@ Contatos, grupos, participantes de referência e mensagens LOCAL_ONLY são persi
 
 ## Conexão próxima experimental (0.2)
 
+A comunicação Android ↔ iOS é requisito do produto. A primeira distribuição pública será Android. O [contrato de interoperabilidade](../../docs/interoperabilidade.md) define o formato e os critérios para um cliente iOS de teste.
+
 Implementado em código: Nearby P2P_POINT_TO_POINT, apelido temporário, ativação de até dez minutos, comparação de código obrigatória, aceite dos dois aparelhos, texto e confirmação do app receptor. O histórico dessa sessão é separado, fica na memória e é apagado ao encerrar ou sair do app. Conversar não exige adicionar contato. O envio só é liberado depois de o SDK concluir a conexão e o consentimento local estar confirmado.
 
 O rádio ainda depende de validação em dois Androids físicos; o responsável dispõe atualmente de apenas um Android. Emulador não substitui esse gate. Ver docs/testes-dois-aparelhos.md e docs/seguranca.md. Não há identidade permanente, bloqueio persistente, grupos de rede, fila, retry automático, internet ou retransmissão.

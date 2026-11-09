@@ -10,7 +10,8 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Calculadora energética | Cálculos W/Wh/Ah, perdas, reserva e solar com testes | Revisão de hipóteses por cenário e dados reais dos equipamentos |
 | Android local | Biblioteca, busca offline, checklist, contatos, grupos e históricos locais | Evoluir armazenamento e acessibilidade com testes físicos |
 | Proteção local | AES-GCM/Android Keystore e migração implementados | Testes, revisão independente e estratégia de recuperação/exportação |
-| Conversa próxima individual | Nearby, opt-in, comparação de código e ACK implementados experimentalmente | Dois Androids físicos, falta de internet, permissões, perda de alcance e release reduzido |
+| Conversa próxima individual | Nearby, opt-in, comparação de código e ACK implementados experimentalmente no Android | Testes físicos Android ↔ Android e Android ↔ iPhone, sem internet, com permissões negadas e perda de alcance |
+| Interoperabilidade Android e iOS | Primeira distribuição pública no Android. Contrato compartilhado definido em [interoperabilidade](docs/interoperabilidade.md) | Cliente iOS de teste e validação bidirecional em aparelhos reais |
 | Contatos de rede e bloqueio | Referências locais e consentimento por sessão | Identidade persistente verificada, vinculação a contato e bloqueio persistente sem confiar em apelidos |
 | Grupos de rede | Grupos locais somente | Protocolo revisado, convites/aceite, gestão/rotação de chaves, saída e remoção de membros |
 | Comunicação por internet | Pendente | Backend autenticado, protocolo de mensagens revisado, abuso/limites, observabilidade sem conteúdo e operação segura |

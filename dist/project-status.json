@@ -17,10 +17,15 @@
       "status": "next",
       "label": "Próximos passos",
       "title": "Testes em aparelhos e mapas offline",
-      "description": "Validar a troca de mensagens sem internet em dois Androids físicos e avançar nos mapas e rotas offline."
+      "description": "Validar conversas próximas sem internet em aparelhos físicos, incluindo Android com iPhone, e avançar nos mapas e rotas offline."
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-08",
+      "title": "Comunicação entre Android e iPhone no roteiro",
+      "description": "A primeira distribuição pública será no Android. O protocolo de mensagens foi documentado para uso nas duas plataformas. O cliente iOS de teste e a troca real de mensagens entre Android e iPhone ainda precisam ser implementados e validados."
+    },
     {
       "date": "2026-11-08",
       "title": "Android 0.2 disponível para testes internos",
