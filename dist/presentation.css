@@ -1,0 +1,27 @@
+.demo-explainer { font-size: .95rem; line-height: 1.65; margin-bottom: 1rem; }
+.real-app { padding-block: clamp(3.5rem, 8vw, 7rem); }
+.real-app-grid, .feature-grid { display: grid; gap: clamp(1rem, 3vw, 2rem); }
+.real-app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.real-app-grid figure { margin: 0; background: #eff4e8; border: 1px solid #c4cfba; border-radius: 24px; padding: clamp(1rem, 4vw, 2.5rem); }
+.real-app-grid img { width: min(100%, 275px); height: auto; display: block; margin: 0 auto; border: 5px solid #17252d; border-radius: 20px; }
+.real-app-grid figcaption { display: grid; gap: .5rem; margin: 1.35rem auto 0; max-width: 35ch; font-size: .95rem; line-height: 1.55; }
+.real-app-grid figcaption strong { font-size: 1.25rem; }
+.app-next { display: flex; gap: 1rem 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.feature-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.feature-grid article { background: #f6f8f1; border: 1px solid #c4cfba; border-radius: 22px; padding: clamp(1.25rem, 3vw, 2rem); }
+.feature-grid h3 { font-size: clamp(1.12rem, 2vw, 1.4rem); line-height: 1.25; margin: .85rem 0 .65rem; }
+.feature-grid p, .editorial-cta p { font-size: .95rem; line-height: 1.6; margin: 0; }
+.feature-state { display: inline-block; padding: .3rem .55rem; border-radius: 6px; background: #d9edba; color: #263a16; font-size: .77rem; font-weight: 700; }
+.feature-state.experimental { background: #f3e7bd; color: #483713; }
+.feature-state.planned { background: #e5e9e5; color: #313d33; }
+.editorial-cta { display: flex; justify-content: space-between; align-items: center; gap: 1.25rem 2rem; background: #d9edba; color: #192910; border-radius: 22px; margin-top: 2rem; padding: clamp(1.25rem, 4vw, 2.5rem); }
+.editorial-cta h3 { font-size: clamp(1.25rem, 3vw, 1.85rem); line-height: 1.2; margin: 0 0 .6rem; }
+.editorial-cta .button { flex: 0 0 auto; }
+.editorial-cta-dark { background: #19272d; color: #f5f8f2; }
+.editorial-cta-dark .button { background: #b7ef55; color: #172311; }
+@media (max-width: 900px) { .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) {
+  .real-app-grid, .feature-grid { grid-template-columns: minmax(0, 1fr); }
+  .editorial-cta { align-items: flex-start; flex-direction: column; }
+  .editorial-cta .button { white-space: normal; }
+}
