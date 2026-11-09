@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "Convite pessoal definido no roteiro",
+      "description": "O convite pessoal levará ao download. Na primeira abertura pelo convite, as duas pessoas serão vinculadas como contatos automaticamente. O fluxo está planejado."
+    },
+    {
+      "date": "2026-11-09",
       "title": "Conversas por perto sem adicionar contatos",
       "description": "A apresentação explica que a descoberta experimental permite iniciar uma conversa individual com outra pessoa por perto, mesmo fora da lista de contatos, quando os dois usam aparelhos compatíveis e aceitam a conexão."
     },
