@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-08",
+      "title": "Código aberto e calculadora solar em destaque",
+      "description": "O repositório público do OurTalk reúne o código, a licença MIT e o guia de contribuição. O menu do site agora dá acesso direto à calculadora de painéis solares e baterias."
+    },
+    {
+      "date": "2026-11-08",
       "title": "Comunicação entre Android e iPhone no roteiro",
       "description": "A primeira distribuição pública será no Android. O protocolo de mensagens foi documentado para uso nas duas plataformas. O cliente iOS de teste e a troca real de mensagens entre Android e iPhone ainda precisam ser implementados e validados."
     },
