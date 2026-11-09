@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "Exclusão e retenção dos dados de convite",
+      "description": "A versão em desenvolvimento permite excluir vínculos dos dois lados e cancelar convites. A limpeza de registros expirados passou por verificação isolada e a política descreve os dados do recurso. O serviço de convites segue em preparação."
+    },
+    {
+      "date": "2026-11-09",
       "title": "Convite pessoal implementado no código",
       "description": "O Android e o serviço de convites já têm código para recuperar um convite após a instalação e vincular os dois contatos. O serviço passou por verificação isolada. A ativação pública e a validação da instalação pela Google Play seguem pendentes."
     },

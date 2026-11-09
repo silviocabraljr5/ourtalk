@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import java.text.DateFormat
 import java.util.Date
 
-@Composable fun InboxScreen(repository:LocalRepository,nearby:NearbySession,inviteRevision:Int=0,onInvite:()->Unit={},onNearbyOpen:()->Unit,onOpen:(String)->Unit){
+@Composable fun InboxScreen(repository:LocalRepository,nearby:NearbySession,inviteRevision:Int=0,onInvite:()->Unit={},onInvitePrivacy:()->Unit={},onNearbyOpen:()->Unit,onOpen:(String)->Unit){
  var tab by rememberSaveable{mutableStateOf("conversations")};var query by remember{mutableStateOf("")};var groupsOnly by rememberSaveable{mutableStateOf(false)}
  var contacts by remember{mutableStateOf(repository.contacts())};var threads by remember{mutableStateOf(repository.threads())}
  LaunchedEffect(inviteRevision) { contacts = repository.contacts() }
@@ -38,6 +38,7 @@ import java.util.Date
   }
   "contacts"->{
    Button(onClick=onInvite,modifier=Modifier.fillMaxWidth()){Text("Convidar para meus contatos")}
+   TextButton(onClick=onInvitePrivacy){Text("Privacidade dos convites")}
    OutlinedButton(onClick={addPerson=true},enabled=contacts.size<100,modifier=Modifier.fillMaxWidth()){Icon(Icons.Outlined.PersonAdd,null);Text(" Adicionar pessoa")}
    val filtered=contacts.filter{it.name.contains(query,true)}.sortedBy{it.name.lowercase()}
    if(filtered.isEmpty())Text("Seus contatos adicionados aparecerão aqui.",color=Color(0xFF9DACB0))

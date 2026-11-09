@@ -10,28 +10,36 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 @Composable
 internal fun ContactInviteFlow(
     repository: LocalRepository,
     showCreate: Boolean,
     closeCreate: () -> Unit,
+    deleting: Boolean,
+    closeDelete: () -> Unit,
     inContacts: Boolean,
     onSync: () -> Unit
 ) {
     val context = LocalContext.current
     val service = remember { ContactInvites(context) }
     val scope = rememberCoroutineScope()
+    val storageLock = remember { Mutex() }
     var pending by remember { mutableStateOf(service.pending) }
     var name by remember { mutableStateOf(service.name) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf("") }
 
     suspend fun sync() {
-        if (!service.hasIdentity) return
         try {
-            repository.syncInvitedContacts(service.contacts())
-            onSync()
+            storageLock.withLock {
+                if (service.hasIdentity) {
+                    repository.syncInvitedContacts(service.contacts())
+                    onSync()
+                }
+            }
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (_: Exception) {
@@ -42,6 +50,44 @@ internal fun ContactInviteFlow(
     LaunchedEffect(Unit) { pending = service.readInstallInvite() }
     LaunchedEffect(inContacts) { if (inContacts) sync() }
 
+    LaunchedEffect(deleting) { if (deleting) error = "" }
+    if (deleting) {
+        AlertDialog(
+            onDismissRequest = { if (!busy) closeDelete() },
+            title = { Text("Excluir dados dos convites?") },
+            text = {
+                Column {
+                    Text("Remove os contatos sincronizados deste aparelho e do servidor e cancela os convites pendentes. A outra pessoa verá a remoção ao sincronizar. Conversas e contatos salvos manualmente ficam no aparelho.")
+                    if (error.isNotEmpty()) Text(error)
+                }
+            },
+            confirmButton = {
+                TextButton(enabled = !busy, onClick = {
+                    busy = true
+                    error = ""
+                    scope.launch {
+                        try {
+                            storageLock.withLock {
+                                service.deleteData { repository.syncInvitedContacts(emptyList()) }
+                            }
+                            name = ""
+                            pending = ""
+                            closeDelete()
+                            onSync()
+                        } catch (cancelled: CancellationException) {
+                            throw cancelled
+                        } catch (_: Exception) {
+                            error = "Não foi possível excluir agora. Confira sua conexão e tente novamente."
+                        } finally {
+                            busy = false
+                        }
+                    }
+                }) { Text(if (busy) "Excluindo…" else "Excluir dados") }
+            },
+            dismissButton = { TextButton(onClick = closeDelete, enabled = !busy) { Text("Cancelar") } }
+        )
+        return
+    }
     if (!showCreate && pending.isEmpty()) return
     val redeeming = pending.isNotEmpty()
     fun close() {

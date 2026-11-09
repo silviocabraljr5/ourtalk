@@ -51,8 +51,9 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
  var selectedThread by rememberSaveable { mutableStateOf("") }
  val screen=Destination.valueOf(route)
  var showInvite by rememberSaveable { mutableStateOf(false) }
+ var showInvitePrivacy by rememberSaveable { mutableStateOf(false) }
  var inviteRevision by remember { mutableIntStateOf(0) }
- ContactInviteFlow(repository, showInvite, { showInvite = false }, screen == Destination.CONTACTS) {
+ ContactInviteFlow(repository, showInvite, { showInvite = false }, showInvitePrivacy, { showInvitePrivacy = false }, screen == Destination.CONTACTS) {
   inviteRevision++
  }
  val go:(Destination)->Unit={ next->previousRoute=route;route=next.name }
@@ -83,7 +84,7 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
      ResourceButton("Biblioteca","Guias para consultar offline",Icons.AutoMirrored.Outlined.MenuBook){go(Destination.LIBRARY)}
      ResourceButton("Localização","Consulte a posição por satélite",Icons.Outlined.MyLocation){go(Destination.MAP)}
     }
-    Destination.CONTACTS->InboxScreen(repository,nearby,inviteRevision,{showInvite=true},onNearbyOpen={go(Destination.PEERCHAT)}){id->selectedThread=id;go(Destination.CHAT)}
+    Destination.CONTACTS->InboxScreen(repository,nearby,inviteRevision,{showInvite=true},{showInvitePrivacy=true},onNearbyOpen={go(Destination.PEERCHAT)}){id->selectedThread=id;go(Destination.CHAT)}
     Destination.CHAT,Destination.PEERCHAT->Unit
     Destination.TALK->LibraryScreen(repository,true){id->selectedGuide=id;go(Destination.GUIDE)}
     Destination.LIBRARY->LibraryScreen(repository,false){id->selectedGuide=id;go(Destination.GUIDE)}

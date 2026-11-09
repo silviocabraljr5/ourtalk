@@ -20,7 +20,8 @@ internal class ContactInvites(context: Context) {
     private val store = SecureStore(app, "ourtalk-invites-v1")
     val pending get() = store.getString("pending", "").orEmpty()
     val name get() = store.getString("name", "").orEmpty()
-    val hasIdentity get() = store.getString("device", "").orEmpty().isNotEmpty()
+    private val identity get() = store.getString("device", "").orEmpty()
+    val hasIdentity get() = identity.isNotEmpty()
 
     suspend fun readInstallInvite(): String {
         if (pending.isNotEmpty() || store.getString("referrer-read", "") == "yes") return pending
@@ -87,6 +88,12 @@ internal class ContactInvites(context: Context) {
             val row = rows.getJSONObject(i)
             SavedContact("invite-" + row.getString("id"), row.getString("name"))
         }
+    }
+
+    suspend fun deleteData(clearLocalContacts: () -> Unit) {
+        if (hasIdentity) request("delete")
+        clearLocalContacts()
+        store.edit().clear().putString("referrer-read", "yes").apply()
     }
 
     private suspend fun request(action: String, displayName: String = "", token: String = ""): JSONObject {
