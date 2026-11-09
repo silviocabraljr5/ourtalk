@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "OurTalk em preparação para a Google Play",
+      "description": "A ficha em português foi cadastrada com ícone e capturas do Android. A política de privacidade do aplicativo já pode ser consultada. A revisão da loja, a assinatura do pacote e a validação da conversa próxima em aparelhos físicos seguem pendentes."
+    },
+    {
+      "date": "2026-11-09",
       "title": "Mapa municipal de saúde na versão Android 0.3",
       "description": "O APK interno inclui um mapa offline de Ribeirão Preto com 31 unidades cadastradas e filtro para as cinco unidades municipais de pronto atendimento. A busca e o filtro passaram em emulador. A distribuição pública e as rotas offline seguem pendentes."
     },
