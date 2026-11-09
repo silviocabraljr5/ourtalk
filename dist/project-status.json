@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-09",
+      "title": "Suporte e classificação do OurTalk na Google Play",
+      "description": "A loja recebeu o contato oficial e registrou a classificação indicativa da versão atual. O pacote Android foi assinado para upload. O aplicativo ainda não está disponível ao público."
+    },
+    {
+      "date": "2026-11-09",
       "title": "OurTalk em preparação para a Google Play",
       "description": "A ficha em português foi cadastrada com ícone e capturas do Android. A política de privacidade do aplicativo já pode ser consultada. A revisão da loja, a assinatura do pacote e a validação da conversa próxima em aparelhos físicos seguem pendentes."
     },
