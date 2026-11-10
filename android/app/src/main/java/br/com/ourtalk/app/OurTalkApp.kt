@@ -99,7 +99,7 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
      ResourceButton("Sobre e privacidade","Conheça esta versão",Icons.Outlined.Info){go(Destination.ABOUT)}
      OutlinedButton(onClick={context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply{type="text/plain";putExtra(Intent.EXTRA_TEXT,"Conheça o OurTalk: um projeto de comunicação, informação e apoio entre pessoas. https://ourtalk.com.br")},"Convidar para o OurTalk"))},modifier=Modifier.fillMaxWidth()){Text("Convidar para conhecer o projeto")}
     }
-    Destination.HELP->{ScreenTitle("Pedir ajuda");InfoCard("Ainda não há envio de pedidos","Esta versão de teste não envia SOS nem aciona serviços de emergência. Estamos desenvolvendo a comunicação e a confirmação de recebimento.")}
+    Destination.HELP->HelpRequestScreen()
     Destination.ABOUT->{
      ScreenTitle("Feito para aproximar")
      InfoCard("OurTalk · ${BuildConfig.VERSION_NAME}","Biblioteca, busca por palavras, favoritos, checklist, contatos e grupos locais. O mapa municipal offline de Ribeirão Preto inclui hospitais e unidades de pronto atendimento. A conexão individual por perto é experimental e depende de Google Play Services, permissões e verificação do código nos dois aparelhos.")

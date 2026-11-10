@@ -6,6 +6,8 @@ O Play Console tem a versão 0.3.0 preparada em produção para o Brasil. A vers
 
 Antes de enviar a 0.4.0, confira a troca de provas e o bloqueio em dois aparelhos, confirme o canal de denúncia e atualize a classificação e a declaração de dados para o pacote que for distribuído.
 
+O código após a 0.4.0 assinada já inclui Pedir ajuda. O texto é preparado no aparelho e o usuário escolhe o destino no seletor do Android. A localização é opcional, sem armazenamento nessa tela, e uma leitura antiga ou simulada fica fora da mensagem. O atalho para o SAMU abre o discador. Para distribuir essa mudança, gere um novo pacote e reveja a ficha de saúde e dados conforme o comportamento da versão.
+
 A [política pública do aplicativo](https://ourtalk.com.br/privacidade-app.html) explica dados locais, mensagens entre aparelhos e a coleta opcional de diagnósticos pelo SDK Nearby. A política do cadastro de avisos continua separada. O acesso pelo Android fica em Recursos → Sobre e privacidade.
 
 Validação: `:app:bundleRelease` compilou o AAB sem assinatura de upload; a política e a atualização de andamento responderam por HTTPS. Essa compilação não valida a comunicação em aparelhos físicos.

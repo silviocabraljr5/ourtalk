@@ -28,7 +28,7 @@ import java.util.Locale
 import kotlinx.coroutines.delay
 
 internal data class PositionFix(val latitude:Double,val longitude:Double,val accuracy:Float,val time:Long,val mock:Boolean)
-private class GpsReader(context:Context) {
+internal class GpsReader(context:Context) {
  private val manager=context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
  private val handler=Handler(Looper.getMainLooper())
  private var listener:LocationListener?=null

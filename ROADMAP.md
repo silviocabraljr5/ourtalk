@@ -18,6 +18,7 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Comunicação por internet | Pendente | Backend autenticado, protocolo de mensagens revisado, abuso/limites, observabilidade sem conteúdo e operação segura |
 | Mapa Ribeirão Preto e rotas offline | Mapa municipal com cadastro de hospitais e pronto atendimento, busca offline e GPS pontual sob permissão | Testes de campo, atualização do cadastro, rede viária, geocodificação e motor de rotas local |
 | Clima e comunicados | Apresentação conceitual | Fontes autorizadas, cache com horário/validade, origem e estados sem conexão |
+| Pedir ajuda | Preparo local de mensagem, GPS opcional, seletor de compartilhamento do Android e atalho para o discador | Validar em aparelhos e integrar pedido e confirmação dentro do OurTalk |
 | TalK | Busca por palavras em guias incluídos | Modelo/recursos do aparelho, fontes, revisão de segurança e avaliação sem inventar orientações |
 | Google Play | AAB de preparação sem chave de produção | Funções validadas, assinatura, política, Data Safety, conta/testadores e revisão da loja |
 
