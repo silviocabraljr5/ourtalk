@@ -21,8 +21,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import br.com.ourtalk.core.WalkGraph
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.text.Normalizer
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.cos
 
@@ -42,7 +46,8 @@ private data class HealthPlace(
     val category: String,
     val address: String,
     val municipal: Boolean,
-    val point: Offset?
+    val point: Offset?,
+    val coordinates: WalkGraph.Point?
 )
 
 private data class HealthMap(
@@ -73,11 +78,12 @@ private fun loadHealthMap(context: Context): HealthMap {
         },
         List(places.length()) { index ->
             val place = places.getJSONObject(index)
-            val point = if (place.has("lat") && place.has("lon")) {
-                bounds.project(place.getDouble("lat"), place.getDouble("lon")).takeIf { it.insideMap() }
+            val coordinates = if (place.has("lat") && place.has("lon")) {
+                WalkGraph.Point(place.getDouble("lat"), place.getDouble("lon"))
             } else null
+            val point = coordinates?.let { bounds.project(it.latitude(), it.longitude()) }?.takeIf { it.insideMap() }
             HealthPlace(place.getString("id"), place.getString("name"), place.getString("category"),
-                place.getString("address"), place.getBoolean("municipal"), point)
+                place.getString("address"), place.getBoolean("municipal"), point, coordinates)
         }
     )
 }
@@ -111,6 +117,18 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     var selected by remember { mutableStateOf<HealthPlace?>(null) }
     var zoom by remember { mutableFloatStateOf(1f) }
     var center by remember { mutableStateOf(Offset(0.5f, 0.5f)) }
+    var graph by remember { mutableStateOf<WalkGraph?>(null) }
+    var graphLoaded by remember { mutableStateOf(false) }
+    var route by remember { mutableStateOf<WalkGraph.Route?>(null) }
+    var routeStatus by remember { mutableStateOf("") }
+    var request by remember { mutableIntStateOf(0) }
+    val currentPosition by rememberUpdatedState(position)
+    LaunchedEffect(context) {
+        graph = withContext(Dispatchers.IO) {
+            runCatching { context.assets.open("ribeirao-caminhada.odbl").buffered().use(::WalkGraph) }.getOrNull()
+        }
+        graphLoaded = true
+    }
     val matches = remember(query, municipalOnly, city) {
         val term = searchable(query.trim())
         city.places.filter {
@@ -125,10 +143,43 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     }
     fun select(place: HealthPlace) {
         selected = place
+        route = null
+        routeStatus = ""
         place.point?.let {
             zoom = maxOf(zoom, 6f)
             center = bounded(it, zoom)
         }
+    }
+    LaunchedEffect(request) {
+        if (request == 0) return@LaunchedEffect
+        val place = selected ?: return@LaunchedEffect
+        val destination = place.coordinates ?: return@LaunchedEffect
+        val fix = position ?: return@LaunchedEffect
+        val network = graph ?: return@LaunchedEffect
+        if (!recent || !fix.canShareAt(System.currentTimeMillis()) || fix.accuracy > 75f) {
+            route = null
+            routeStatus = "Consulte uma posição GPS recente e com melhor precisão."
+            return@LaunchedEffect
+        }
+        route = null
+        routeStatus = "Calculando no aparelho…"
+        val origin = WalkGraph.Point(fix.latitude, fix.longitude)
+        val result = withContext(Dispatchers.Default) { network.route(origin, destination) }
+        if (selected != place || currentPosition != fix) return@LaunchedEffect
+        route = result
+        routeStatus = if (result == null) "Não há um caminho conectado na malha disponível." else ""
+        if (result != null) {
+            val path = result.points().map { city.bounds.project(it.latitude(), it.longitude()) }
+            val minX = path.minOf { it.x }
+            val maxX = path.maxOf { it.x }
+            val minY = path.minOf { it.y }
+            val maxY = path.maxOf { it.y }
+            zoom = (0.75f / maxOf(maxX - minX, maxY - minY, 0.02f)).coerceIn(1f, 18f)
+            center = bounded(Offset((minX + maxX) / 2, (minY + maxY) / 2), zoom)
+        }
+    }
+    val routeLine = remember(route) {
+        route?.points()?.map { city.bounds.project(it.latitude(), it.longitude()) }.orEmpty()
     }
     Canvas(
         Modifier.fillMaxWidth().aspectRatio(city.bounds.aspectRatio)
@@ -170,6 +221,14 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
                 drawPath(path, Color(0xFF223537))
                 drawPath(path, Color(0xFF9CAFAA), style = Stroke(1.5.dp.toPx()))
             }
+            if (routeLine.size > 1) {
+                val path = Path()
+                routeLine.forEachIndexed { index, vertex ->
+                    val point = pixel(vertex)
+                    if (index == 0) path.moveTo(point.x, point.y) else path.lineTo(point.x, point.y)
+                }
+                drawPath(path, Color(0xFF64BEFF), style = Stroke(3.dp.toPx()))
+            }
             matches.forEach { place ->
                 place.point?.let {
                     val color = when {
@@ -210,17 +269,24 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
         style = MaterialTheme.typography.bodySmall)
     Text("Contorno: IBGE. Unidades: CNES ${city.snapshot} e Prefeitura. Ponto do HC UE: © OpenStreetMap contributors (ODbL).",
         style = MaterialTheme.typography.bodySmall)
-    Text("O mapa mostra a localização cadastrada. Para saber se a unidade recebe seu caso, confirme com o serviço. O app não calcula rotas.",
+    Text("O mapa mostra a localização cadastrada. Para saber se a unidade recebe seu caso, confirme com o serviço.",
         style = MaterialTheme.typography.bodySmall)
+    TextButton(onClick = {
+        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.openstreetmap.org/copyright"))) }
+    }) { Text("Malha de caminhada: © OpenStreetMap contributors (ODbL)") }
     FilterChip(selected = municipalOnly, onClick = {
         municipalOnly = !municipalOnly
         selected = null
+        route = null
+        routeStatus = ""
         visibleCount = 6
     }, label = { Text("Só pronto atendimento municipal") })
     OutlinedTextField(
         value = query, onValueChange = {
             query = it
             selected = null
+            route = null
+            routeStatus = ""
             visibleCount = 6
         },
         label = { Text("Buscar unidade ou endereço") }, singleLine = true,
@@ -232,6 +298,27 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
             if (place.point == null) "Localização no mapa indisponível" else null,
             if (place.id.all { it.isDigit() }) "CNES ${place.id}" else null)
         InfoCard(place.name, details.joinToString("\n"))
+        val network = graph
+        val origin = position?.let { WalkGraph.Point(it.latitude, it.longitude) }
+        val destination = place.coordinates
+        when {
+            !graphLoaded -> Text("Carregando a malha de caminhada…")
+            network == null -> Text("Malha de caminhada indisponível.")
+            destination == null || !network.covers(destination) ->
+                Text("Esta unidade está fora da cobertura de rotas a pé.")
+            origin == null || !recent || position.mock || position.accuracy > 75f ->
+                Text("Consulte sua posição atual no GPS para calcular uma rota a pé.")
+            !network.covers(origin) -> Text("Sua posição está fora da cobertura de rotas a pé.")
+            else -> OutlinedButton(onClick = { request++ }) { Text("Traçar rota a pé sem internet") }
+        }
+        if (routeStatus.isNotEmpty()) Text(routeStatus)
+        route?.let {
+            val km = String.format(Locale.forLanguageTag("pt-BR"), "%.2f", it.meters() / 1000)
+            InfoCard("Rota estimada a pé · $km km",
+                "A linha azul mostra o caminho cadastrado. A posição inicial e a unidade ficam a cerca de " +
+                    "${it.startGap().toInt()} m e ${it.endGap().toInt()} m da malha. " +
+                    "Confira calçadas, travessias e a entrada no local. A malha não informa interdições em tempo real.")
+        }
     }
     Text("${matches.size} unidades encontradas")
     matches.take(visibleCount).forEach { place ->

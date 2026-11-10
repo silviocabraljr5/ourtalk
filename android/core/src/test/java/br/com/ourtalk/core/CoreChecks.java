@@ -28,8 +28,28 @@ public final class CoreChecks {
         byte[] ackWithText=data.clone();ackWithText[1]=1;invalid(()->ChatFrame.decode(ackWithText));
         System.out.println("Frame checks passed: Unicode, ACK, size limits, truncation, version, type, length and invalid UTF-8");
     }
-    public static void main(String[] args) {
-        sessionChecks(); frameChecks();
+    private static void routeChecks() throws java.io.IOException {
+        var bytes = new java.io.ByteArrayOutputStream();
+        var out = new java.io.DataOutputStream(bytes);
+        out.writeInt(0x4F545731);
+        for (double bound : new double[]{-21.2, -47.83, -21.16, -47.78}) out.writeDouble(bound);
+        out.writeInt(4);
+        out.writeInt(3);
+        for (int value : new int[]{-21180000, -47810000, -21180000, -47809000,
+                -21180000, -47808000, -21190000, -47800000}) out.writeInt(value);
+        for (int value : new int[]{0, 1, 1, 0, 1, 2}) out.writeInt(value);
+        var graph = new WalkGraph(new java.io.ByteArrayInputStream(bytes.toByteArray()));
+        var origin = new WalkGraph.Point(-21.18, -47.81);
+        var target = new WalkGraph.Point(-21.18, -47.808);
+        var route = graph.route(origin, target);
+        check(route != null && route.points().size() == 3 && route.meters() > 200 && route.meters() < 215);
+        check(graph.route(target, origin) == null);
+        check(graph.route(origin, new WalkGraph.Point(-21.19, -47.8)) == null);
+        check(graph.route(origin, new WalkGraph.Point(-21.21, -47.8)) == null);
+        System.out.println("Walking route checks passed: directed paths, distance, disconnection and coverage");
+    }
+    public static void main(String[] args) throws java.io.IOException {
+        sessionChecks(); frameChecks(); routeChecks();
         var contact = new ContactConsent();
         check(!contact.mayQueueMessage());
         fails(() -> contact.respond(true));

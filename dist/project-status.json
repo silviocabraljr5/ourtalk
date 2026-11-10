@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-10",
+      "title": "Primeiro traçado de rotas a pé sem internet",
+      "description": "O mapa Android calcula e desenha uma rota estimada até uma unidade de saúde quando origem e destino estão conectados na malha inicial de Ribeirão Preto. A cobertura é parcial e a validação em campo segue pendente."
+    },
+    {
+      "date": "2026-11-10",
       "title": "Preparação de pedidos de ajuda no Android",
       "description": "O botão Pedir ajuda ganhou uma tela para escrever um pedido, anexar GPS opcional e escolher o app que fará o envio. A tela também abre o discador do SAMU. A função ainda não está disponível na Google Play."
     },

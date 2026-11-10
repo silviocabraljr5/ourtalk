@@ -16,7 +16,7 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Convite pessoal de contato | Android e serviço de convites com exclusão e limpeza de registros expirados | Configurar a limpeza periódica no ambiente de produção, revisar Segurança dos dados no Play Console e validar a instalação e a sincronização pela Google Play. |
 | Grupos de rede | Grupos locais somente | Protocolo revisado, convites/aceite, gestão/rotação de chaves, saída e remoção de membros |
 | Comunicação por internet | Pendente | Backend autenticado, protocolo de mensagens revisado, abuso/limites, observabilidade sem conteúdo e operação segura |
-| Mapa Ribeirão Preto e rotas offline | Mapa municipal com cadastro de hospitais e pronto atendimento, busca offline e GPS pontual sob permissão | Testes de campo, atualização do cadastro, rede viária, geocodificação e motor de rotas local |
+| Mapa Ribeirão Preto e rotas offline | Cadastro municipal, busca offline, GPS e cálculo de rota a pé em um recorte urbano | Testes de campo, ampliar a malha, atualizar o cadastro e implementar orientação curva a curva |
 | Clima e comunicados | Apresentação conceitual | Fontes autorizadas, cache com horário/validade, origem e estados sem conexão |
 | Pedir ajuda | Preparo local de mensagem, GPS opcional, seletor de compartilhamento do Android e atalho para o discador | Validar em aparelhos e integrar pedido e confirmação dentro do OurTalk |
 | TalK | Busca por palavras em guias incluídos | Modelo/recursos do aparelho, fontes, revisão de segurança e avaliação sem inventar orientações |
