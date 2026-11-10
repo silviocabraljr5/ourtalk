@@ -69,8 +69,10 @@ private fun condition(code: Int) = when (code) {
     else -> "Condição sem descrição"
 }
 
-private fun downloadWeather(cache: AtomicFile): WeatherSnapshot {
-    val connection = URL("https://ourtalk.com.br/weather-ribeirao.json").openConnection() as HttpsURLConnection
+internal fun <T> downloadCitySnapshot(
+    filename: String, cache: AtomicFile, parse: (ByteArray) -> T, fetchedAt: (T) -> Instant
+): T {
+    val connection = URL("https://ourtalk.com.br/$filename").openConnection() as HttpsURLConnection
     try {
         connection.instanceFollowRedirects = false
         connection.connectTimeout = 6_000
@@ -87,10 +89,10 @@ private fun downloadWeather(cache: AtomicFile): WeatherSnapshot {
             }
             output.toByteArray()
         }
-        val snapshot = parseWeather(bytes)
-        require(snapshot.fetchedAt <= Instant.now().plusSeconds(300))
-        val previous = runCatching { parseWeather(cache.readFully()) }.getOrNull()
-        require(previous == null || snapshot.fetchedAt >= previous.fetchedAt)
+        val snapshot = parse(bytes)
+        require(fetchedAt(snapshot) <= Instant.now().plusSeconds(300))
+        val previous = runCatching { parse(cache.readFully()) }.getOrNull()
+        require(previous == null || fetchedAt(snapshot) >= fetchedAt(previous))
         val output = cache.startWrite()
         try {
             output.write(bytes)
@@ -145,7 +147,9 @@ internal fun WeatherScreen() {
         feedback = ""
         scope.launch {
             try {
-                snapshot = withContext(Dispatchers.IO) { downloadWeather(cache) }
+                snapshot = withContext(Dispatchers.IO) {
+                    downloadCitySnapshot("weather-ribeirao.json", cache, ::parseWeather, WeatherSnapshot::fetchedAt)
+                }
                 now = Instant.now()
             } catch (cancelled: CancellationException) {
                 throw cancelled

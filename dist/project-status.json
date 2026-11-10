@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-10",
+      "title": "Comunicados meteorológicos do INMET no Android",
+      "description": "O Android em desenvolvimento consulta e salva avisos para Ribeirão Preto, com fonte, período e indicação de consulta desatualizada. A origem foi verificada no servidor. A tela ainda não está disponível na Google Play."
+    },
+    {
+      "date": "2026-11-10",
       "title": "Previsão de Ribeirão Preto com consulta offline",
       "description": "A versão em desenvolvimento baixa a previsão de três dias, identifica a fonte e o horário e guarda a última resposta válida no aparelho. A fonte do site tem atualização programada."
     },
