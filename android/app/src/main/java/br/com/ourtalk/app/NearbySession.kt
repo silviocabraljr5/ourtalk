@@ -111,7 +111,7 @@ class NearbySession(context: Context) {
             if(generation!=token||!active)return rejectStale(id)
             val code=info.authenticationDigits
             val raw=info.rawAuthenticationToken
-            if(!info.endpointName.matches(Regex("OurTalk-[0-9a-f]{8}")) || code.isNullOrBlank() || raw.isNullOrEmpty() || !runCatching{gate.challenge(id)}.isSuccess){rejectStale(id);return}
+            if(!info.endpointName.matches(Regex("OurTalk-[0-9a-f]{8}")) || code.isNullOrBlank() || (raw == null || raw.isEmpty()) || !runCatching{gate.challenge(id)}.isSuccess){rejectStale(id);return}
             sessionToken=raw.copyOf()
             incomingConnection=info.isIncomingConnection
             busy=true;peerAlias=info.endpointName

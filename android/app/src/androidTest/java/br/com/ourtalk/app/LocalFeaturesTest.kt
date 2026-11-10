@@ -35,6 +35,8 @@ class LocalFeaturesTest {
   nav("CONTACTS")
   ui.onNodeWithTag("chat-tab-nearby").performClick()
   ui.onNodeWithTag("nearby-start").performScrollTo().performClick()
+  ui.onNodeWithText("Regras das conversas por perto").assertIsDisplayed()
+  ui.onNodeWithText("Aceitar e continuar").performClick()
   ui.onNodeWithText("Google Play Services não está disponível para a conexão próxima neste aparelho.").assertExists()
   nav("TALK")
   field("Buscar conteúdo salvo","bateria")
