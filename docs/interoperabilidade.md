@@ -42,3 +42,6 @@ Recibo       010100112233445566778899aabbccddeeff00000000
 - Para comunicação a distância, usar um protocolo comum entre clientes Android e iOS. Backend, identidade e grupos continuam como entregas próprias.
 
 Referências oficiais do Google: [Nearby Connections entre plataformas](https://developers.google.com/nearby/) e [configuração do SDK Swift](https://developers.google.com/nearby/connections/swift/get-started).
+# Nota sobre o protocolo de segurança v2
+
+O Android 0.4 usa o identificador de serviço terminado em `.nearby.v2`. Antes das mensagens, os dois lados trocam chaves públicas e provas assinadas sobre o token bruto do Nearby e o papel de cada lado. O receptor compara a impressão digital da chave com a lista local de bloqueios. O formato de mensagens descrito abaixo continua após essa etapa. Um cliente iOS precisa implementar o mesmo fluxo e ser validado antes de anunciar interoperabilidade com a versão 0.4.

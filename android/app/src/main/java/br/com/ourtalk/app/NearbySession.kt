@@ -21,13 +21,17 @@ data class NearbyChallenge(val endpoint: String, val alias: String, val digits: 
 enum class LiveDelivery { SENDING, RECEIVED, UNCONFIRMED, INCOMING }
 data class LiveMessage(val id: UUID, val text: String, val time: Long, val delivery: LiveDelivery)
 
-/** Foreground-only, one-to-one Nearby session. No saved identity and no background relay. */
+/** Foreground-only, one-to-one Nearby session with a local block list. */
 @SuppressLint("MissingPermission") // Entry point is guarded by runtime permission checks in NearbyScreen.
 class NearbySession(context: Context) {
     private val app = context.applicationContext
     private val client by lazy { Nearby.getConnectionsClient(app) }
     private val handler = Handler(Looper.getMainLooper())
     private val gate = SessionGate()
+    private val identity by lazy { NearbyIdentity(app) }
+    private var sessionToken: ByteArray? = null
+    private var incomingConnection = false
+    private var peerIdentity: String? = null
     private var generation = 0
     private var deadline = 0L
     private var pendingTimeout: Runnable? = null
@@ -47,12 +51,22 @@ class NearbySession(context: Context) {
     var status by mutableStateOf("Descoberta desligada"); private set
     var error by mutableStateOf(""); private set
     var draft by mutableStateOf(""); private set
-    private val serviceId = "${app.packageName}.nearby.v1"
+    private val serviceId = "${app.packageName}.nearby.v2"
+
+    fun acceptedTerms() = identity.acceptedTerms
+    fun acceptTerms() = identity.acceptTerms()
+    fun blockedCount() = identity.blockedCount()
+    fun unblockAll() = identity.unblockAll()
+    fun blockPeer() {
+        val peer = peerIdentity ?: return
+        identity.block(peer)
+        stop("Aparelho bloqueado. A conversa foi encerrada.")
+    }
 
     fun available() = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(app) == ConnectionResult.SUCCESS
 
     fun start() {
-        if(active)return
+        if(active || !acceptedTerms())return
         if(!available()){status="Google Play Services não está disponível para a conexão próxima neste aparelho.";return}
         stop("")
         val token=++generation
@@ -96,7 +110,10 @@ class NearbySession(context: Context) {
         override fun onConnectionInitiated(id:String,info:ConnectionInfo){
             if(generation!=token||!active)return rejectStale(id)
             val code=info.authenticationDigits
-            if(!info.endpointName.matches(Regex("OurTalk-[0-9a-f]{8}")) || code.isNullOrBlank() || !runCatching{gate.challenge(id)}.isSuccess){rejectStale(id);return}
+            val raw=info.rawAuthenticationToken
+            if(!info.endpointName.matches(Regex("OurTalk-[0-9a-f]{8}")) || code.isNullOrBlank() || raw.isNullOrEmpty() || !runCatching{gate.challenge(id)}.isSuccess){rejectStale(id);return}
+            sessionToken=raw.copyOf()
+            incomingConnection=info.isIncomingConnection
             busy=true;peerAlias=info.endpointName
             challenge=NearbyChallenge(id,peerAlias,code)
             status="Compare o código nos dois aparelhos."
@@ -106,9 +123,14 @@ class NearbySession(context: Context) {
         override fun onConnectionResult(id:String,result:ConnectionResolution){
             if(generation!=token||!active)return
             if(result.status.isSuccess && runCatching{gate.connected(id)}.isSuccess){
-                pendingTimeout?.let{handler.removeCallbacks(it)};pendingTimeout=null
-                challenge=null;connected=true;busy=false;status="Conexão próxima verificada nesta sessão"
+                challenge=null;status="Verificando o aparelho…"
                 client.stopAdvertising();client.stopDiscovery();peers=emptyList()
+                runCatching {
+                    val proof=identity.proof(checkNotNull(sessionToken), incomingConnection)
+                    client.sendPayload(id,Payload.fromBytes(proof)).addOnFailureListener {
+                        if(generation==token) stop("Não foi possível verificar o aparelho.")
+                    }
+                }.onFailure { stop("Não foi possível verificar o aparelho.") }
             }else stop("A conexão não foi aceita e verificada nos dois aparelhos.")
         }
         override fun onDisconnected(id:String){if(generation==token && id==gate.endpoint())stop("Conexão encerrada. Ative novamente para conversar.")}
@@ -128,6 +150,16 @@ class NearbySession(context: Context) {
         override fun onPayloadReceived(endpoint:String,payload:Payload){
             if(generation!=token||!active||!gate.permitsData(endpoint))return
             if(payload.type!=Payload.Type.BYTES){client.cancelPayload(payload.id);stop("A sessão foi encerrada por receber um formato não permitido.");return}
+            if (!connected) {
+                val peer=runCatching {
+                    identity.verify(checkNotNull(payload.asBytes()),checkNotNull(sessionToken),incomingConnection)
+                }.getOrElse { stop("O outro aparelho não pôde ser verificado.");return }
+                if (identity.isBlocked(peer)) { stop("Aparelho bloqueado.");return }
+                peerIdentity=peer
+                pendingTimeout?.let{handler.removeCallbacks(it)};pendingTimeout=null
+                connected=true;busy=false;status="Conexão próxima verificada nesta sessão"
+                return
+            }
             val now=SystemClock.elapsedRealtime()
             if(now-incomingWindow>10_000){incomingWindow=now;incomingCount=0}
             if(++incomingCount>60){stop("A sessão foi encerrada pelo limite de mensagens.");return}
@@ -151,7 +183,7 @@ class NearbySession(context: Context) {
     fun editDraft(value:String){if(connected&&value.length<=2000)draft=value}
     fun send(text:String):Boolean{
         val endpoint=gate.endpoint()?:return false
-        if(!active||!gate.permitsData(endpoint)||SystemClock.elapsedRealtime()>=deadline||messages.size>=300)return false
+        if(!active||!connected||!gate.permitsData(endpoint)||SystemClock.elapsedRealtime()>=deadline||messages.size>=300)return false
         val frame=runCatching{ChatFrame.text(UUID.randomUUID(),text.trim())}.getOrElse{error="O texto contém caracteres não permitidos ou excede o limite.";return false}
         error=""
         draft=""
@@ -175,6 +207,7 @@ class NearbySession(context: Context) {
         if(active){runCatching{client.stopAdvertising()};runCatching{client.stopDiscovery()};runCatching{client.stopAllEndpoints()}}
         gate.stop();active=false;connected=false;busy=false;challenge=null;peers=emptyList()
         received.clear();incomingCount=0;incomingWindow=0
+        sessionToken?.fill(0);sessionToken=null;peerIdentity=null;incomingConnection=false
         // Ephemeral chats and codes are intentionally removed when the session ends.
         messages=emptyList();draft="";alias="";peerAlias="";status=reason;error=""
     }

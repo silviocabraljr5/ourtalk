@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-09",
+  "updatedAt": "2026-11-10",
   "stages": [
     {
       "status": "complete",
@@ -21,6 +21,11 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-10",
+      "title": "Controles de segurança para conversas por perto",
+      "description": "O código Android agora inclui regras de uso, bloqueio de instalação e acesso a denúncias na conversa. A validação em aparelhos e o lançamento na Google Play seguem pendentes."
+    },
     {
       "date": "2026-11-09",
       "title": "Exclusão e retenção dos dados de convite",

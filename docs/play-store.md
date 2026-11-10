@@ -2,6 +2,10 @@
 
 O cadastro do app `br.com.ourtalk.app` e a ficha pt-BR foram criados no Play Console. A ficha inclui ícone, arte de destaque e capturas da interface Android. O app ainda não foi enviado para revisão.
 
+O Play Console tem a versão 0.3.0 preparada em produção para o Brasil. A versão 0.4.0 usa o código 4 e acrescenta aceite das regras antes de descobrir aparelhos, bloqueio persistente por chave de instalação e um atalho para redigir uma denúncia. O bloqueio encerra a sessão e recusa novas mensagens da mesma instalação após verificar a chave. A reinstalação pode gerar outra chave. A denúncia abre um rascunho no cliente de e-mail e depende do envio pelo usuário e da triagem pelo suporte.
+
+Antes de enviar a 0.4.0, confira a troca de provas e o bloqueio em dois aparelhos, confirme o canal de denúncia e atualize a classificação e a declaração de dados para o pacote que for distribuído.
+
 A [política pública do aplicativo](https://ourtalk.com.br/privacidade-app.html) explica dados locais, mensagens entre aparelhos e a coleta opcional de diagnósticos pelo SDK Nearby. A política do cadastro de avisos continua separada. O acesso pelo Android fica em Recursos → Sobre e privacidade.
 
 Validação: `:app:bundleRelease` compilou o AAB sem assinatura de upload; a política e a atualização de andamento responderam por HTTPS. Essa compilação não valida a comunicação em aparelhos físicos.

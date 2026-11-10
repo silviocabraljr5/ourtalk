@@ -3,6 +3,8 @@ package br.com.ourtalk.app
 import android.Manifest
 import android.os.Build
 import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -34,6 +36,9 @@ fun nearbyPermissions():Array<String> = buildList {
 @Composable fun NearbyControls(session:NearbySession,onOpen:()->Unit){
     val context=LocalContext.current
     var denied by remember{mutableStateOf(false)}
+    var showTerms by remember { mutableStateOf(false) }
+    var showUnblock by remember { mutableStateOf(false) }
+    var blockedCount by remember(session.active) { mutableIntStateOf(session.blockedCount()) }
     val permissions=rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){result->
         val granted=nearbyPermissions().all{result[it]==true||context.checkSelfPermission(it)==PackageManager.PERMISSION_GRANTED}
         denied=!granted
@@ -43,9 +48,36 @@ fun nearbyPermissions():Array<String> = buildList {
     if(!session.active){
         Text("Ao ativar, seu aparelho anuncia apenas um apelido temporário. Não compartilha seu nome, contatos ou GPS. Você pode conversar sem adicionar a pessoa.")
         Text("Conexão experimental com Google Play Services, Bluetooth e Wi-Fi. O SDK pode coletar diagnósticos de uso conforme as configurações do Google no aparelho.",style=MaterialTheme.typography.bodySmall,color=Color(0xFFADBDC2))
-        Button(modifier=Modifier.fillMaxWidth().testTag("nearby-start"),onClick={
+        val start = {
             if(!session.available()){session.start()}else if(nearbyPermissions().all{context.checkSelfPermission(it)==PackageManager.PERMISSION_GRANTED}){denied=false;session.start()}else permissions.launch(nearbyPermissions())
+        }
+        Button(modifier=Modifier.fillMaxWidth().testTag("nearby-start"),onClick={
+            if (session.acceptedTerms()) start() else showTerms = true
         }){Text("Ativar por 10 minutos")}
+        if (blockedCount > 0) TextButton(onClick = { showUnblock = true }) {
+            Text("Limpar bloqueios ($blockedCount)")
+        }
+        if (showTerms) AlertDialog(
+            onDismissRequest = { showTerms = false },
+            title = { Text("Regras das conversas por perto") },
+            text = {
+                Column {
+                    Text("Ameaças, assédio, discriminação, golpes, conteúdo sexual exploratório e divulgação de dados pessoais de terceiros são proibidos. Você pode bloquear um aparelho e preparar uma denúncia na própria conversa.")
+                    TextButton(onClick = {
+                        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ourtalk.com.br/termos-conversas.html"))) }
+                    }) { Text("Ler os termos completos") }
+                }
+            },
+            confirmButton = { TextButton(onClick = { session.acceptTerms(); showTerms = false; start() }) { Text("Aceitar e continuar") } },
+            dismissButton = { TextButton(onClick = { showTerms = false }) { Text("Cancelar") } }
+        )
+        if (showUnblock) AlertDialog(
+            onDismissRequest = { showUnblock = false },
+            title = { Text("Limpar todos os bloqueios?") },
+            text = { Text("Os aparelhos desbloqueados poderão voltar a iniciar pedidos de conexão.") },
+            confirmButton = { TextButton(onClick = { session.unblockAll(); blockedCount = 0; showUnblock = false }) { Text("Limpar bloqueios") } },
+            dismissButton = { TextButton(onClick = { showUnblock = false }) { Text("Cancelar") } }
+        )
     }else{
         if(session.alias.isNotEmpty())Text("Seu apelido: ${session.alias}",color=TalkLime)
         Text("Encerrar, sair do app ou passar 10 minutos apaga a conversa temporária deste aparelho. O outro participante pode copiar o que recebeu.",style=MaterialTheme.typography.bodySmall)
@@ -71,9 +103,22 @@ fun nearbyPermissions():Array<String> = buildList {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun NearbyChatScreen(session:NearbySession,onBack:()->Unit){
+    val context = LocalContext.current
+    var safetyOpen by remember { mutableStateOf(false) }
+    var showBlock by remember { mutableStateOf(false) }
+    var showReport by remember { mutableStateOf(false) }
+    var reportError by remember { mutableStateOf(false) }
     val state=rememberLazyListState()
     LaunchedEffect(session.messages.size){if(session.messages.isNotEmpty())state.animateScrollToItem(session.messages.lastIndex)}
-    Scaffold(topBar={TopAppBar(title={Column{Text(if(session.peerAlias.isEmpty())"Conversa próxima" else session.peerAlias);Text(if(session.connected)"Código verificado nesta sessão" else "Conexão encerrada",style=MaterialTheme.typography.labelSmall)}},navigationIcon={IconButton(onClick=onBack){Icon(Icons.AutoMirrored.Outlined.ArrowBack,"Voltar às conversas")}})},bottomBar={Surface(modifier=Modifier.imePadding().navigationBarsPadding(),color=Color(0xFF142129)){
+    Scaffold(topBar={TopAppBar(title={Column{Text(if(session.peerAlias.isEmpty())"Conversa próxima" else session.peerAlias);Text(if(session.connected)"Código verificado nesta sessão" else "Conexão encerrada",style=MaterialTheme.typography.labelSmall)}},navigationIcon={IconButton(onClick=onBack){Icon(Icons.AutoMirrored.Outlined.ArrowBack,"Voltar às conversas")}},actions={
+        if (session.connected) Box {
+            TextButton(onClick = { safetyOpen = true }) { Text("Segurança") }
+            DropdownMenu(expanded = safetyOpen, onDismissRequest = { safetyOpen = false }) {
+                DropdownMenuItem(text = { Text("Bloquear aparelho") }, onClick = { safetyOpen = false; showBlock = true })
+                DropdownMenuItem(text = { Text("Denunciar conversa") }, onClick = { safetyOpen = false; reportError = false; showReport = true })
+            }
+        }
+    })},bottomBar={Surface(modifier=Modifier.imePadding().navigationBarsPadding(),color=Color(0xFF142129)){
         Row(Modifier.padding(12.dp),verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(8.dp)){
             OutlinedTextField(value=session.draft,onValueChange=session::editDraft,placeholder={Text("Mensagem")},modifier=Modifier.weight(1f).testTag("nearby-composer"),maxLines=5,enabled=session.connected)
             FilledIconButton(enabled=session.connected&&session.draft.isNotBlank()&&session.messages.size<300,onClick={session.send(session.draft)}){Icon(Icons.AutoMirrored.Outlined.Send,"Enviar para a pessoa conectada")}
@@ -96,4 +141,25 @@ fun nearbyPermissions():Array<String> = buildList {
         }
         if(session.messages.size>=300)Text("Limite desta sessão atingido.",modifier=Modifier.padding(16.dp))
     }}
+    if (showBlock) AlertDialog(
+        onDismissRequest = { showBlock = false },
+        title = { Text("Bloquear este aparelho?") },
+        text = { Text("A conversa será encerrada e novas sessões com esta instalação serão recusadas.") },
+        confirmButton = { TextButton(onClick = { session.blockPeer(); showBlock = false }) { Text("Bloquear") } },
+        dismissButton = { TextButton(onClick = { showBlock = false }) { Text("Cancelar") } }
+    )
+    if (showReport) AlertDialog(
+        onDismissRequest = { showReport = false },
+        title = { Text("Denunciar conversa") },
+        text = { Text(if (reportError)
+            "Nenhum aplicativo de e-mail disponível. Escreva para contato@ourtalk.com.br."
+            else "Abra um rascunho para contato@ourtalk.com.br. Você pode descrever o ocorrido e decidir o que enviar. Nenhuma mensagem da conversa é anexada automaticamente.") },
+        confirmButton = { TextButton(onClick = {
+            runCatching {
+                val address = Uri.parse("mailto:contato@ourtalk.com.br?subject=Den%C3%BAncia%20OurTalk")
+                context.startActivity(Intent(Intent.ACTION_SENDTO, address))
+            }.onSuccess { showReport = false }.onFailure { reportError = true }
+        }) { Text("Abrir e-mail") } },
+        dismissButton = { TextButton(onClick = { showReport = false }) { Text("Cancelar") } }
+    )
 }
