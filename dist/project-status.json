@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-10",
+      "title": "Previsão de Ribeirão Preto com consulta offline",
+      "description": "A versão em desenvolvimento baixa a previsão de três dias, identifica a fonte e o horário e guarda a última resposta válida no aparelho. A fonte do site tem atualização programada."
+    },
+    {
+      "date": "2026-11-10",
       "title": "Primeiro traçado de rotas a pé sem internet",
       "description": "O mapa Android calcula e desenha uma rota estimada até uma unidade de saúde quando origem e destino estão conectados na malha inicial de Ribeirão Preto. A cobertura é parcial e a validação em campo segue pendente."
     },

@@ -33,7 +33,7 @@ import java.util.UUID
 
 val TalkLime=Color(0xFFA9EA1C)
 val TalkDark=Color(0xFF0B1216)
-private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Conversas"),TALK("TalK"),MAP("Mapa"),RESOURCES("Recursos"),CHECKLIST("Preparar"),LIBRARY("Biblioteca"),GUIDE("Leitura"),CHAT("Conversa"),PEERCHAT("Conversa próxima"),HELP("Pedir ajuda"),ABOUT("Sobre o OurTalk") }
+private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Conversas"),TALK("TalK"),MAP("Mapa"),RESOURCES("Recursos"),CHECKLIST("Preparar"),LIBRARY("Biblioteca"),GUIDE("Leitura"),CHAT("Conversa"),PEERCHAT("Conversa próxima"),HELP("Pedir ajuda"),WEATHER("Previsão do tempo"),ABOUT("Sobre o OurTalk") }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun OurTalkApp() {
@@ -83,6 +83,7 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
      ResourceButton("Minha preparação","Checklist salvo neste aparelho",Icons.Outlined.Checklist){go(Destination.CHECKLIST)}
      ResourceButton("Biblioteca","Guias para consultar offline",Icons.AutoMirrored.Outlined.MenuBook){go(Destination.LIBRARY)}
      ResourceButton("Localização","Consulte a posição por satélite",Icons.Outlined.MyLocation){go(Destination.MAP)}
+     ResourceButton("Previsão do tempo","Ribeirão Preto",Icons.Outlined.Cloud){go(Destination.WEATHER)}
     }
     Destination.CONTACTS->InboxScreen(repository,nearby,inviteRevision,{showInvite=true},{showInvitePrivacy=true},onNearbyOpen={go(Destination.PEERCHAT)}){id->selectedThread=id;go(Destination.CHAT)}
     Destination.CHAT,Destination.PEERCHAT->Unit
@@ -96,10 +97,12 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
      ResourceButton("Preparar","Organize seu checklist",Icons.Outlined.Checklist){go(Destination.CHECKLIST)}
      ResourceButton("Biblioteca","Leituras e favoritos offline",Icons.AutoMirrored.Outlined.MenuBook){go(Destination.LIBRARY)}
      ResourceButton("Contatos","Conversas e grupos locais",Icons.Outlined.PeopleOutline){go(Destination.CONTACTS)}
+     ResourceButton("Previsão do tempo","Consulte a última previsão salva",Icons.Outlined.Cloud){go(Destination.WEATHER)}
      ResourceButton("Sobre e privacidade","Conheça esta versão",Icons.Outlined.Info){go(Destination.ABOUT)}
      OutlinedButton(onClick={context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply{type="text/plain";putExtra(Intent.EXTRA_TEXT,"Conheça o OurTalk: um projeto de comunicação, informação e apoio entre pessoas. https://ourtalk.com.br")},"Convidar para o OurTalk"))},modifier=Modifier.fillMaxWidth()){Text("Convidar para conhecer o projeto")}
     }
     Destination.HELP->HelpRequestScreen()
+    Destination.WEATHER->WeatherScreen()
     Destination.ABOUT->{
      ScreenTitle("Feito para aproximar")
      InfoCard("OurTalk · ${BuildConfig.VERSION_NAME}","Biblioteca, busca por palavras, favoritos, checklist, contatos e grupos locais. O mapa municipal offline de Ribeirão Preto inclui hospitais e unidades de pronto atendimento. A conexão individual por perto é experimental e depende de Google Play Services, permissões e verificação do código nos dois aparelhos.")
