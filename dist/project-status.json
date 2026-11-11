@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-11",
+      "title": "Cofre de documentos no Android",
+      "description": "A versão em desenvolvimento importa, exporta e apaga cópias de PDFs e imagens guardadas com criptografia no aparelho. A validação em aparelho segue pendente."
+    },
+    {
+      "date": "2026-11-11",
       "title": "Ficha pessoal de saúde no Android",
       "description": "A versão em desenvolvimento ganhou uma ficha offline para alergias, medicamentos, observações e contato de emergência. Os dados ficam criptografados no aparelho e podem ser excluídos na própria tela."
     },

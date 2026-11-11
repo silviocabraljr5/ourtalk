@@ -20,6 +20,7 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Clima e comunicados | Previsão e avisos do INMET para Ribeirão Preto, com fonte, horário, validade e cópia offline | Validar em aparelho, ampliar a cobertura e integrar comunicados de outras fontes e notificações |
 | Pedir ajuda | Preparo local de mensagem, GPS opcional, seletor de compartilhamento do Android e atalho para o discador | Validar em aparelhos e integrar pedido e confirmação dentro do OurTalk |
 | Ficha pessoal de saúde | Cadastro local criptografado de alergias, medicamentos, observações e contato de emergência | Validar a tela e o discador em aparelho |
+| Cofre de documentos | Importação, exportação e exclusão de PDFs e imagens com armazenamento local criptografado | Validar a integridade dos arquivos e os seletores em aparelho |
 | TalK | Busca por palavras em guias incluídos | Modelo/recursos do aparelho, fontes, revisão de segurança e avaliação sem inventar orientações |
 | Google Play | AAB de preparação sem chave de produção | Funções validadas, assinatura, política, Data Safety, conta/testadores e revisão da loja |
 
