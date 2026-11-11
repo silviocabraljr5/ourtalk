@@ -42,7 +42,7 @@ class SecureStore(context: Context, private val namespace: String) {
         check(disk.edit().putString(namespace, Base64.encodeToString(encrypted, Base64.NO_WRAP)).commit()) { "Local storage unavailable" }
     }
     init {
-        require(namespace in setOf("ourtalk-local-v1", "ourtalk-position-v1", "ourtalk-invites-v1", "ourtalk-nearby-safety-v1"))
+        require(namespace in setOf("ourtalk-local-v1", "ourtalk-position-v1", "ourtalk-invites-v1", "ourtalk-nearby-safety-v1", "ourtalk-health-card-v1"))
         synchronized(SecureStore::class.java) {
             val legacy = context.applicationContext.getSharedPreferences(namespace, Context.MODE_PRIVATE)
             if (!disk.contains(namespace) && legacy.all.isNotEmpty()) {

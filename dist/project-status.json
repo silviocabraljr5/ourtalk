@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-10",
+  "updatedAt": "2026-11-11",
   "stages": [
     {
       "status": "complete",
@@ -21,6 +21,11 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-11",
+      "title": "Ficha pessoal de saúde no Android",
+      "description": "A versão em desenvolvimento ganhou uma ficha offline para alergias, medicamentos, observações e contato de emergência. Os dados ficam criptografados no aparelho e podem ser excluídos na própria tela."
+    },
     {
       "date": "2026-11-10",
       "title": "Comunicados meteorológicos do INMET no Android",
