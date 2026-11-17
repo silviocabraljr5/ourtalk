@@ -30,6 +30,10 @@ import java.util.Date
  LaunchedEffect(inviteRevision) { contacts = repository.contacts() }
  var addPerson by rememberSaveable{mutableStateOf(false)};var newGroup by rememberSaveable{mutableStateOf(false)};var newChat by rememberSaveable{mutableStateOf(false)};var error by remember{mutableStateOf("")}
  ScreenTitle("Conversas")
+ Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+  Button(onClick=onInvite,modifier=Modifier.weight(1f)){Icon(Icons.Outlined.PersonAdd,null);Text(" Convidar pessoa")}
+  OutlinedButton(onClick={tab="nearby"},modifier=Modifier.weight(1f)){Text("Por perto")}
+ }
  OutlinedTextField(value=query,onValueChange={if(it.length<=80)query=it},label={Text("Buscar conversa ou pessoa")},leadingIcon={Icon(Icons.Outlined.Search,null)},modifier=Modifier.fillMaxWidth(),singleLine=true)
  ScrollableTabRow(selectedTabIndex=when(tab){"contacts"->1;"nearby"->2;else->0},edgePadding=0.dp){listOf("conversations" to "Conversas","contacts" to "Contatos","nearby" to "Por perto").forEach{(key,title)->Tab(modifier=Modifier.testTag("chat-tab-$key"),selected=tab==key,onClick={tab=key},text={Text(title)})}}
  when(tab){
@@ -37,7 +41,6 @@ import java.util.Date
    NearbyControls(nearby,onNearbyOpen)
   }
   "contacts"->{
-   Button(onClick=onInvite,modifier=Modifier.fillMaxWidth()){Text("Convidar para meus contatos")}
    TextButton(onClick=onInvitePrivacy){Text("Privacidade dos convites")}
    OutlinedButton(onClick={addPerson=true},enabled=contacts.size<100,modifier=Modifier.fillMaxWidth()){Icon(Icons.Outlined.PersonAdd,null);Text(" Adicionar pessoa")}
    val filtered=contacts.filter{it.name.contains(query,true)}.sortedBy{it.name.lowercase()}

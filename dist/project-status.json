@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-11",
+  "updatedAt": "2026-11-17",
   "stages": [
     {
       "status": "complete",
@@ -10,17 +10,22 @@
     {
       "status": "ongoing",
       "label": "Em andamento",
-      "title": "OurTalk Android 0.3",
-      "description": "A versão interna inclui mapa municipal offline com hospitais e unidades de pronto atendimento de Ribeirão Preto."
+      "title": "Android em desenvolvimento",
+      "description": "Mapa offline com unidades de saúde, ruas e rotas de cobertura parcial; recursos locais de saúde, documentos, clima e comunicados implementados no código."
     },
     {
       "status": "next",
       "label": "Próximos passos",
       "title": "Validação em campo e preparação da Play Store",
-      "description": "Conferir o cadastro de saúde em campo e testar a troca de mensagens sem internet entre aparelhos físicos. O cálculo de rotas segue no roteiro."
+      "description": "Concluir convites e comunicação, ampliar o mapa e validar em aparelhos reais antes da versão final."
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-17",
+      "title": "Mapa mais legível e convite visível em Conversas",
+      "description": "A compilação de desenvolvimento mostra ruas da malha offline disponível, controles de zoom e acesso direto a Convidar pessoa. Compilação Android e verificações do núcleo passaram. Cobertura municipal de ruas, ativação do serviço de convites e validação em aparelhos seguem pendentes."
+    },
     {
       "date": "2026-11-11",
       "title": "Cofre de documentos no Android",

@@ -13,6 +13,16 @@ import java.util.PriorityQueue;
 public final class WalkGraph {
     public record Point(double latitude, double longitude) {}
     public record Route(List<Point> points, double meters, double startGap, double endGap) {}
+    public record Segment(Point from, Point to) {}
+    public List<Segment> segments() {
+        List<Segment> result = new ArrayList<>();
+        for (int node = 0; node < points.length; node++) {
+            for (int edge = offsets[node]; edge < offsets[node + 1]; edge++) {
+                result.add(new Segment(points[node], points[targets[edge]]));
+            }
+        }
+        return result;
+    }
     private record Visit(int node, double meters) implements Comparable<Visit> {
         @Override public int compareTo(Visit other) { return Double.compare(meters, other.meters); }
     }

@@ -101,6 +101,7 @@ private enum class Destination(val title:String) { HOME("Início"),CONTACTS("Con
      ResourceButton("Comunicados","Avisos oficiais para Ribeirão Preto",Icons.Outlined.Info){go(Destination.ALERTS)}
      ResourceButton("Minha ficha de saúde","Alergias, medicamentos e contato de emergência",Icons.Outlined.FavoriteBorder){go(Destination.HEALTH_CARD)}
      ResourceButton("Meu cofre","Documentos protegidos no aparelho",Icons.Outlined.Lock){go(Destination.VAULT)}
+     ResourceButton("Convidar pessoa","Envie seu convite pessoal",Icons.Outlined.PersonAdd){showInvite=true}
      ResourceButton("Sobre e privacidade","Conheça esta versão",Icons.Outlined.Info){go(Destination.ABOUT)}
      OutlinedButton(onClick={context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply{type="text/plain";putExtra(Intent.EXTRA_TEXT,"Conheça o OurTalk: um projeto de comunicação, informação e apoio entre pessoas. https://ourtalk.com.br")},"Convidar para o OurTalk"))},modifier=Modifier.fillMaxWidth()){Text("Convidar para conhecer o projeto")}
     }

@@ -115,8 +115,8 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     var municipalOnly by remember { mutableStateOf(false) }
     var visibleCount by remember { mutableIntStateOf(6) }
     var selected by remember { mutableStateOf<HealthPlace?>(null) }
-    var zoom by remember { mutableFloatStateOf(1f) }
-    var center by remember { mutableStateOf(Offset(0.5f, 0.5f)) }
+    var zoom by remember { mutableFloatStateOf(8f) }
+    var center by remember { mutableStateOf(city.bounds.project(-21.180, -47.810)) }
     var graph by remember { mutableStateOf<WalkGraph?>(null) }
     var graphLoaded by remember { mutableStateOf(false) }
     var route by remember { mutableStateOf<WalkGraph.Route?>(null) }
@@ -181,6 +181,12 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     val routeLine = remember(route) {
         route?.points()?.map { city.bounds.project(it.latitude(), it.longitude()) }.orEmpty()
     }
+    val streets = remember(graph) {
+        graph?.segments()?.map {
+            city.bounds.project(it.from().latitude(), it.from().longitude()) to
+                city.bounds.project(it.to().latitude(), it.to().longitude())
+        }.orEmpty()
+    }
     Canvas(
         Modifier.fillMaxWidth().aspectRatio(city.bounds.aspectRatio)
             .semantics { contentDescription = "Mapa municipal de saúde de Ribeirão Preto. As unidades também estão na lista abaixo." }
@@ -221,6 +227,14 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
                 drawPath(path, Color(0xFF223537))
                 drawPath(path, Color(0xFF9CAFAA), style = Stroke(1.5.dp.toPx()))
             }
+            streets.forEach { (from, to) ->
+                val a = pixel(from)
+                val b = pixel(to)
+                if (maxOf(a.x,b.x) >= 0 && minOf(a.x,b.x) <= size.width &&
+                    maxOf(a.y,b.y) >= 0 && minOf(a.y,b.y) <= size.height) {
+                    drawLine(Color(0xFF527076), a, b, strokeWidth = 1.5.dp.toPx())
+                }
+            }
             if (routeLine.size > 1) {
                 val path = Path()
                 routeLine.forEachIndexed { index, vertex ->
@@ -248,6 +262,11 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
                 drawCircle(color, 5.dp.toPx(), marker)
             }
         }
+    }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        OutlinedButton(enabled=zoom>1f,onClick={zoom=(zoom/1.5f).coerceAtLeast(1f);center=bounded(center,zoom)}) { Text("−",modifier=Modifier.semantics{contentDescription="Diminuir mapa"}) }
+        OutlinedButton(enabled=zoom<30f,onClick={zoom=(zoom*1.5f).coerceAtMost(30f);center=bounded(center,zoom)}) { Text("+",modifier=Modifier.semantics{contentDescription="Ampliar mapa"}) }
+        TextButton(onClick={zoom=8f;center=bounded(city.bounds.project(-21.180,-47.810),zoom)}) { Text("Centro") }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedButton(onClick = {
