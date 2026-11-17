@@ -49,6 +49,15 @@ public final class CoreChecks {
         System.out.println("Walking route checks passed: directed paths, distance, disconnection and coverage");
     }
     public static void main(String[] args) throws java.io.IOException {
+        String invite = "a".repeat(48);
+        check(InviteLink.token("  " + invite + "  ").equals(invite));
+        String official = "https://play.google.com/store/apps/details?id=br.com.ourtalk.app&referrer=ourtalk_invite%3D" + invite;
+        check(InviteLink.token(official).equals(invite));
+        for (String bad : new String[]{"", "a".repeat(47), official.replace("play.google.com", "evil.example"),
+                official.replace("https:", "http:"), official.replace("br.com.ourtalk.app", "another.app"),
+                official + "&id=br.com.ourtalk.app", official + "#fragment", "https://play.google.com@evil.example/"})
+            invalid(() -> InviteLink.token(bad));
+        System.out.println("Invitation checks passed: installed-app input, official links, malformed and hostile links");
         sessionChecks(); frameChecks(); routeChecks();
         var contact = new ContactConsent();
         check(!contact.mayQueueMessage());

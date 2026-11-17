@@ -1,6 +1,6 @@
 # Entregas e gates do OurTalk
 
-Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir código implementado, validação e lançamento.
+Atualizado em 17/11/2026. Este arquivo organiza o projeto completo sem confundir código implementado, validação e lançamento.
 
 | Área | Estado atual | Gate para próxima entrega |
 |---|---|---|
@@ -13,7 +13,7 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Conversa próxima individual | Nearby, opt-in, comparação de código e ACK implementados experimentalmente no Android | Testes físicos Android ↔ Android e Android ↔ iPhone, sem internet, com permissões negadas e perda de alcance |
 | Interoperabilidade Android e iOS | Primeira distribuição pública no Android. Contrato compartilhado definido em [interoperabilidade](docs/interoperabilidade.md) | Cliente iOS de teste e validação bidirecional em aparelhos reais |
 | Contatos de rede e bloqueio | Referências locais e consentimento por sessão | Identidade persistente verificada, vinculação a contato e bloqueio persistente sem confiar em apelidos |
-| Convite pessoal de contato | Android e serviço de convites com exclusão e limpeza de registros expirados | Configurar a limpeza periódica no ambiente de produção, revisar Segurança dos dados no Play Console e validar a instalação e a sincronização pela Google Play. |
+| Convite pessoal de contato | Serviço ativo com vínculo recíproco e exclusão verificados por HTTPS; Android aceita convite após instalação e por colagem | Limpeza horária configurada; revisar Segurança dos dados no Play Console e validar a instalação e a sincronização pela Google Play. |
 | Grupos de rede | Grupos locais somente | Protocolo revisado, convites/aceite, gestão/rotação de chaves, saída e remoção de membros |
 | Comunicação por internet | Pendente | Backend autenticado, protocolo de mensagens revisado, abuso/limites, observabilidade sem conteúdo e operação segura |
 | Mapa Ribeirão Preto e rotas offline | Cadastro municipal, busca offline, GPS e cálculo de rota a pé em um recorte urbano | Testes de campo, ampliar a malha, atualizar o cadastro e implementar orientação curva a curva |
@@ -22,7 +22,7 @@ Atualizado em 08/11/2026. Este arquivo organiza o projeto completo sem confundir
 | Ficha pessoal de saúde | Cadastro local criptografado de alergias, medicamentos, observações e contato de emergência | Validar a tela e o discador em aparelho |
 | Cofre de documentos | Importação, exportação e exclusão de PDFs e imagens com armazenamento local criptografado | Validar a integridade dos arquivos e os seletores em aparelho |
 | TalK | Busca por palavras em guias incluídos | Modelo/recursos do aparelho, fontes, revisão de segurança e avaliação sem inventar orientações |
-| Google Play | AAB de preparação sem chave de produção | Funções validadas, assinatura, política, Data Safety, conta/testadores e revisão da loja |
+| Google Play | Chave de upload e pacotes de preparação existentes; situação atual da revisão deve ser consultada no Console | Funções validadas, assinatura, política, Data Safety, conta/testadores e revisão da loja |
 
 ## Ordem de trabalho
 

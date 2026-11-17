@@ -65,6 +65,12 @@ internal class ContactInvites(context: Context) {
         store.edit().putString("pending", "").apply()
     }
 
+    fun receive(input: String): String {
+        val token = br.com.ourtalk.core.InviteLink.token(input)
+        store.edit().putString("pending", token).apply()
+        return token
+    }
+
     suspend fun create(displayName: String): String {
         val result = request("create", displayName)
         val token = result.getString("token")
@@ -118,6 +124,7 @@ internal class ContactInvites(context: Context) {
                 connection.setRequestProperty("Content-Type", "application/json; charset=utf-8")
                 connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
                 if (connection.responseCode == 409) throw UnavailableInvite()
+                if (connection.responseCode == 503) throw ServiceNotReady()
                 if (connection.responseCode != 200) throw IOException("Invite service unavailable")
                 JSONObject(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
             } finally {
@@ -127,6 +134,7 @@ internal class ContactInvites(context: Context) {
     }
 
     class UnavailableInvite : IOException()
+    class ServiceNotReady : IOException()
     companion object {
         private val TOKEN = Regex("[0-9a-f]{48}")
     }

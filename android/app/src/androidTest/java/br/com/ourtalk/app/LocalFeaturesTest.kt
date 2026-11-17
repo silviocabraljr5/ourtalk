@@ -15,6 +15,24 @@ class LocalFeaturesTest {
  private fun tap(text:String,scroll:Boolean=false){val node=ui.onNodeWithText(text,useUnmergedTree=false);if(scroll)node.performScrollTo();node.performTouchInput{click()}}
  private fun nav(tag:String){ui.onNodeWithTag("nav-$tag").performClick()}
  private fun field(label:String,value:String){ui.onNode(hasSetTextAction() and hasText(label)).performTextInput(value)}
+ @Test fun receivedInviteRequiresConfirmationAndCanBeCancelledWithoutNetwork(){
+  nav("CONTACTS")
+  tap("Convidar pessoa")
+  tap("Usar convite recebido")
+  field("Seu nome","Pessoa de teste")
+  field("Link ou código do convite","https://invalid.example/")
+  tap("Conferir convite")
+  ui.onNodeWithText("Convite inválido. Cole o link completo do OurTalk ou o código recebido.").assertExists()
+  ui.onNode(hasSetTextAction() and hasText("Link ou código do convite")).performTextReplacement("a".repeat(48))
+  tap("Conferir convite")
+  ui.onNodeWithText("Você recebeu um convite").assertExists()
+  ui.onNodeWithText("Adicionar contato").assertExists()
+  val service=ContactInvites(ApplicationProvider.getApplicationContext<Context>())
+  ui.runOnIdle { org.junit.Assert.assertEquals("a".repeat(48),service.pending) }
+  tap("Cancelar")
+  ui.runOnIdle { org.junit.Assert.assertEquals("",service.pending) }
+  ui.onNodeWithText("Você recebeu um convite").assertDoesNotExist()
+ }
  @Test fun municipalHealthMapFiltersAndFindsFacilitiesWithoutLocation(){
   nav("MAP")
   ui.onNodeWithText("Hospitais e pronto atendimento").performScrollTo().assertIsDisplayed()

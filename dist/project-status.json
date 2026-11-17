@@ -23,6 +23,11 @@
   "updates": [
     {
       "date": "2026-11-17",
+      "title": "Serviço de convites ativo e mapa com navegação por gestos",
+      "description": "O servidor passou pela verificação HTTPS de criação, vínculo recíproco, repetição sem duplicidade e exclusão. O Android em desenvolvimento aceita convites colados, ordena unidades por proximidade e permite zoom com dois dedos. A instalação via Google Play, o rádio e a interface em aparelho ainda precisam de validação; nenhuma nova versão foi enviada à loja nesta entrega."
+    },
+    {
+      "date": "2026-11-17",
       "title": "Mapa mais legível e convite visível em Conversas",
       "description": "A compilação de desenvolvimento mostra ruas da malha offline disponível, controles de zoom e acesso direto a Convidar pessoa. Compilação Android e verificações do núcleo passaram. Cobertura municipal de ruas, ativação do serviço de convites e validação em aparelhos seguem pendentes."
     },

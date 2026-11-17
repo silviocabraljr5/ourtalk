@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -29,6 +29,7 @@ import java.text.Normalizer
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.hypot
 
 private data class MapBounds(val south: Double, val west: Double, val north: Double, val east: Double) {
     val heightMeters = ((north - south) * 111_195).toFloat()
@@ -113,6 +114,7 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     }
     var query by remember { mutableStateOf("") }
     var municipalOnly by remember { mutableStateOf(false) }
+    var nearestFirst by remember { mutableStateOf(false) }
     var visibleCount by remember { mutableIntStateOf(6) }
     var selected by remember { mutableStateOf<HealthPlace?>(null) }
     var zoom by remember { mutableFloatStateOf(8f) }
@@ -123,18 +125,29 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     var routeStatus by remember { mutableStateOf("") }
     var request by remember { mutableIntStateOf(0) }
     val currentPosition by rememberUpdatedState(position)
+    LaunchedEffect(position, recent) {
+        route = null
+        if (request > 0) routeStatus = "A posição mudou ou venceu. Calcule novamente para atualizar o caminho."
+    }
     LaunchedEffect(context) {
         graph = withContext(Dispatchers.IO) {
             runCatching { context.assets.open("ribeirao-caminhada.odbl").buffered().use(::WalkGraph) }.getOrNull()
         }
         graphLoaded = true
     }
-    val matches = remember(query, municipalOnly, city) {
+    fun distanceTo(place: HealthPlace): Double? {
+        val fix = position ?: return null
+        val point = place.coordinates ?: return null
+        val dy = (point.latitude() - fix.latitude) * 111195
+        val dx = (point.longitude() - fix.longitude) * 111195 * cos(Math.toRadians((point.latitude() + fix.latitude) / 2))
+        return hypot(dx, dy)
+    }
+    val matches = remember(query, municipalOnly, city, nearestFirst, position) {
         val term = searchable(query.trim())
         city.places.filter {
             (!municipalOnly || it.municipal) &&
                 searchable("${it.name} ${it.category} ${it.address} ${it.id}").contains(term)
-        }
+        }.let { places -> if (nearestFirst) places.sortedBy { distanceTo(it) ?: Double.MAX_VALUE } else places }
     }
     val gps = position?.let { city.bounds.project(it.latitude, it.longitude) }
     fun bounded(point: Offset, scale: Float): Offset {
@@ -190,12 +203,15 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     Canvas(
         Modifier.fillMaxWidth().aspectRatio(city.bounds.aspectRatio)
             .semantics { contentDescription = "Mapa municipal de saúde de Ribeirão Preto. As unidades também estão na lista abaixo." }
-            .then(if (zoom == 1f) Modifier else Modifier.pointerInput(zoom) {
-                detectDragGestures { change, delta ->
-                    change.consume()
-                    center = bounded(center - Offset(delta.x / size.width, delta.y / size.height) / zoom, zoom)
+            .pointerInput(Unit) {
+                detectTransformGestures { centroid, pan, scale, _ ->
+                    val anchor = center + Offset(centroid.x / size.width - 0.5f, centroid.y / size.height - 0.5f) / zoom
+                    val nextZoom = (zoom * scale).coerceIn(1f, 30f)
+                    center = bounded(anchor - Offset((centroid.x + pan.x) / size.width - 0.5f,
+                        (centroid.y + pan.y) / size.height - 0.5f) / nextZoom, nextZoom)
+                    zoom = nextZoom
                 }
-            })
+            }
             .pointerInput(matches, zoom) {
                 detectTapGestures { tap ->
                     val point = center + Offset(tap.x / size.width - 0.5f, tap.y / size.height - 0.5f) / zoom
@@ -300,9 +316,15 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
         routeStatus = ""
         visibleCount = 6
     }, label = { Text("Só pronto atendimento municipal") })
+    if (position != null) {
+        FilterChip(selected = nearestFirst, onClick = { nearestFirst = !nearestFirst; visibleCount = 6 },
+            label = { Text(if (recent) "Mais próximos de mim" else "Mais próximos da última posição") })
+        if (nearestFirst) Text("Distâncias em linha reta; não indicam acesso, tempo de viagem ou disponibilidade de atendimento.",
+            style = MaterialTheme.typography.bodySmall)
+    }
     OutlinedTextField(
         value = query, onValueChange = {
-            query = it
+            query = it.take(160)
             selected = null
             route = null
             routeStatus = ""
@@ -342,7 +364,10 @@ internal fun OfflineCityMap(position: PositionFix?, recent: Boolean) {
     Text("${matches.size} unidades encontradas")
     matches.take(visibleCount).forEach { place ->
         TextButton(onClick = { select(place) }, modifier = Modifier.fillMaxWidth()) {
-            Text("${place.name} · ${place.category}")
+            val distance = if (nearestFirst) distanceTo(place)?.let {
+                if (it < 1000) " · ${it.toInt()} m" else " · ${String.format(Locale.forLanguageTag("pt-BR"), "%.1f", it / 1000)} km"
+            }.orEmpty() else ""
+            Text("${place.name} · ${place.category}$distance")
         }
     }
     if (matches.size > visibleCount) {
